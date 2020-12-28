@@ -10,6 +10,12 @@ tutti:
 
 Alessio Cocco:
 
+
 Andrea Valentinuzzi:
 
+
 Giovanni Brejc:
+
+
+PROGRAMMA:
+    timetable.txt -> timetable_v2 (errori input) -> timetable_v3 (ritardi / code / stazioni piene)
