@@ -1,0 +1,15 @@
+ARGOMENTI:
+    line & time >> struttura stazioni
+    station     >> type -> railways & transit
+    train       >> type -> speed, priority & line & time / delay
+
+tutti:
+    main
+    inputs
+    cmake
+
+Alessio Cocco:
+
+Andrea Valentinuzzi:
+
+Giovanni Brejc:
