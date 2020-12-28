@@ -1,0 +1,4 @@
+[numero treno (intero)]
+[campo == 0 per partenza dalla stazione origine, == 1 per partenza dalla stazione capolinea]
+[Tipologia  di treno: == 1 per regionale, == 2 per alta velocità, ==3 per alta velocità super]
+[orario arrivo stazione 1] [orario arrivo stazione 2] ... [orario arrivo stazione capolinea]

@@ -1,0 +1,2 @@
+[nome stazione origine]
+[nomestazione] [distanza dall’origine]
