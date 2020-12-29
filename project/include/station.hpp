@@ -1,5 +1,5 @@
 #ifndef station
-    #define station
+#define station
 
 #include "deposit.hpp"
 #include "train.hpp"
@@ -11,39 +11,40 @@ class Station
 private:
     std::string name;
     double distance;
-    std::queue<Train> rail_std;
-    Station* left;
-    Station* right;
-    Deposit right;
-    Deposit left;
+    std::vector<Train> rail_left;
+    std::vector<Train> rail_right;
+    Deposit dep_left;
+    Deposit dep_right;
 
 public:
     Station(std::string n, double d)
     {
         name = n;
         distance = d;
+
+        dep_right();
+        dep_left();
     }
     ~Station();
-    
-    std::string get_name() { return name; }
-    Station get_right() { return *right; }
-    Station get_left() { return *left; }
-    double get_distance() { return distance; }
+
+    std::string get_name() const { return name; }
+    double get_distance() const { return distance; }
 };
 
 class Main_Station : public Station
 {
-public :
+public:
     Main_Station(std::string n, double d) : Station(n, d)
-    {}
+    {
+    }
 };
 
 class Local_Station : public Station
 {
-public :
+public:
     Local_Station(std::string n, double d) : Station(n, d)
-    {}
+    {
+    }
 };
-
 
 #endif
