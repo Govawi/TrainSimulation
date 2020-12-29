@@ -1,5 +1,5 @@
 #ifndef station
-#define station
+    #define station
 
 #include "deposit.hpp"
 #include "train.hpp"

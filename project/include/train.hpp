@@ -1,5 +1,5 @@
 #ifndef train
-#define train
+    #define train
 
 #include <string>
 #include "station.hpp"
