@@ -19,3 +19,10 @@ Giovanni Brejc:
 
 PROGRAMMA:
     timetable.txt -> timetable_v2 (errori input) -> timetable_v3 (ritardi / code / stazioni piene)
+
+
+    funzione simulation()  --> dovrebbe essere la funzione principale che raggruppa tutto quanto
+    {
+        ciclo 1439 iterazioni per scandire una giornata
+        ogni ciclo e' un minuto e il programma analizza cosa succede in quel minuto con relativi output
+    }
