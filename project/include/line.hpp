@@ -12,6 +12,6 @@ public:
     Line(const std::vector<std::string> &t, const std::vector<std::string> &l);
     ~Line();
 
-    int train_number(std::string n);
+    int train_number(int n);
     int station_name(std::string n);
 };
