@@ -1,3 +1,6 @@
+#ifndef line
+    #define line
+
 #include <string>
 #include <vector>
 #include "station.hpp"
@@ -15,3 +18,5 @@ public:
     int train_number(int n);
     int station_name(std::string n);
 };
+
+#endif
