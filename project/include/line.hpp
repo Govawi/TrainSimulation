@@ -24,18 +24,18 @@ public:
     void vector_trains()
     {
         // file -> string
-        ifstream file("timetable.txt");
+        std::ifstream file("timetable.txt");
         std::string t;
         while (!file.eof())
         {
-            getline(file, t);
+            std::getline(file, t);
             int train_number = stoi(t.substr(0, t.find(' ')));
-            int train_direction = stoi(t.at(t.find(' ') + 1));
-            int train_type = stoi(t.at(t.find(' ') + 3)); //  xx 0 3
+            int train_direction = (int)(t.at(t.find(' ') + 1));
+            int train_type = (int)(t.at(t.find(' ') + 3)); //  xx 0 3
             std::vector<int> train_times;
-            while ()
+            while (/*condizione*/)
             {
-                train_times.push_back(stoi(t.substring()));
+                train_times.push_back(stoi(t.substr()));
             }
         }
         // controllo orari
