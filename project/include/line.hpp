@@ -46,16 +46,16 @@ public:
     {
         std::string l;
         std::ifstream file("line_description.txt");
+        getline(file, l);
+        //creare stazione origine e push_back
+
         while (!file.eof())
         {
             getline(file, l);
-            std::string name = l.substr(0, l.find(' '));
-            int type = (int)(l.at(l.find(' ') + 1));
-            int distance = stoi(l.substr(l.find(' ') + 3, l.size()));
-            if (type == 0)
-                stations.push_back(Main_Station(name, distance));
-            else
-                stations.push_back(Local_Station(name, distance));
+            int distance = stoi(l.substr(l.rfind(' ')));
+            int type = stoi(l.substr(l.rfind(' ') - 1, 1));
+            std::string name = l.substr(0, l.rfind(' ') - 2);
+            //crere stazioni
         }
     }
 
