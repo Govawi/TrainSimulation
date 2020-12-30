@@ -1,5 +1,5 @@
 #ifndef train
-    #define train
+#define train
 
 #include <string>
 #include "station.hpp"
@@ -12,6 +12,9 @@ protected:
     const int velocity_max;
     double distance;
     const std::string station_original;
+    int late = 0, departure;
+    std::vector<int> expected_times;
+    int stations_done = 0 ;
 
 public:
     Train(int i, std::string o, int n)
@@ -29,6 +32,7 @@ public:
     void set_velocity(int v) { velocity_curr = v; }
     void set_distance(double d) { distance = d; }
     std::string get_station_original() const { return station_original; }
+    int get_stations_done() const { return stations_done; }
 };
 
 class Fast_Train : public Train

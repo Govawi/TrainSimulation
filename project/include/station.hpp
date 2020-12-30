@@ -8,9 +8,10 @@
 
 class Station
 {
-private:
+protected:
     std::string name;
     double distance;
+    const bool local;
     std::vector<Train> rail_left;
     std::vector<Train> rail_right;
     Deposit dep_left;
@@ -29,22 +30,19 @@ public:
 
     std::string get_name() const { return name; }
     double get_distance() const { return distance; }
+    bool is_local() const { return local; }
 };
 
 class Main_Station : public Station
 {
 public:
-    Main_Station(std::string n, double d) : Station(n, d)
-    {
-    }
+    Main_Station(std::string n, double d) : Station(n, d), local{false} {}
 };
 
 class Local_Station : public Station
 {
 public:
-    Local_Station(std::string n, double d) : Station(n, d)
-    {
-    }
+    Local_Station(std::string n, double d) : Station(n, d), local{true} {}
 };
 
 #endif
