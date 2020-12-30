@@ -46,7 +46,6 @@ public:
     {
         std::string l;
         std::ifstream file("line_description.txt");
-        int i = 0;
         while (!file.eof())
         {
             getline(file, l);
@@ -54,9 +53,9 @@ public:
             int type = (int)(l.at(l.find(' ') + 1));
             int distance = stoi(l.substr(l.find(' ') + 3, l.size()));
             if (type == 0)
-                stations.at(i++) = Main_Station(name, distance);
+                stations.push_back(Main_Station(name, distance));
             else
-                station.at(i++) = Local_Staion(name, distance);
+                stations.push_back(Local_Station(name, distance));
         }
     }
 
