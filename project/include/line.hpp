@@ -63,7 +63,7 @@ public:
                 stations.push_back(Local_Station(name,distance));
             else
             {
-                cout << "Missing station type in line : " << stations.size() << endl;
+                std::cout << "Missing station type in line : " << stations.size() << std::endl;
                 throw std::exception();
             }
 
