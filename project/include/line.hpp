@@ -1,6 +1,7 @@
 #ifndef line
 #define line
 
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -59,7 +60,7 @@ public:
             //creare stazioni
             if(type == 0)
                 stations.push_back(Main_Station(name,distance));
-            else if(type == 0)
+            else if(type == 1)
                 stations.push_back(Local_Station(name,distance));
             else
             {
