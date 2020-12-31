@@ -48,6 +48,7 @@ public:
         std::ifstream file("line_description.txt");
         getline(file, l);
         //creare stazione origine e push_back
+        stations.push_back(Main_Station(l,0));
 
         while (!file.eof())
         {
@@ -55,7 +56,17 @@ public:
             int distance = stoi(l.substr(l.rfind(' ')));
             int type = stoi(l.substr(l.rfind(' ') - 1, 1));
             std::string name = l.substr(0, l.rfind(' ') - 2);
-            //crere stazioni
+            //creare stazioni
+            if(type == 0)
+                stations.push_back(Main_Station(name,distance));
+            else if(type == 0)
+                stations.push_back(Local_Station(name,distance));
+            else
+            {
+                cout << "Missing station type in line : " << stations.size() << endl;
+                throw std::exception();
+            }
+
         }
     }
 
