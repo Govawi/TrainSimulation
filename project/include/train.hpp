@@ -11,17 +11,18 @@ protected:
     int velocity_curr;
     const int velocity_max;
     double distance;
-    const std::string station_original;
+    const int direction;
     int late = 0, departure;
     std::vector<int> expected_times;
     int stations_done = 0 ;
 
 public:
-    Train(int i, std::string o, int n)
-        : velocity_max{i}, station_original{o}, train_name{n}
+    Train(int i, int d, int n, std::vector<int> t)
+        : velocity_max{i}, direction{d}, train_name{n}
     {
         velocity_curr = 0;
         distance = 0;
+        expected_times = t;
     }
     ~Train();
 
@@ -31,26 +32,26 @@ public:
     double get_distance() const { return distance; }
     void set_velocity(int v) { velocity_curr = v; }
     void set_distance(double d) { distance = d; }
-    std::string get_station_original() const { return station_original; }
+    int get_direction() const { return direction; }
     int get_stations_done() const { return stations_done; }
 };
 
 class Fast_Train : public Train
 {
 public:
-    Fast_Train(std::string s, int n) : Train(300, s, n) {}
+    Fast_Train(int d, int n, std::vector<int> t) : Train(300, d, n, t) {}
 };
 
 class Medium_Train : public Train
 {
 public:
-    Medium_Train(std::string s, int n) : Train(240, s, n) {}
+    Medium_Train(int d, int n, std::vector<int> t) : Train(240, d, n, t) {}
 };
 
 class Slow_Train : public Train
 {
 public:
-    Slow_Train(std::string s, int n) : Train(160, s, n) {}
+    Slow_Train(int d, int n, std::vector<int> t) : Train(160, d, n, t) {}
 };
 
 #endif
