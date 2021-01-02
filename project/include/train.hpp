@@ -14,7 +14,7 @@ protected:
     const int direction;
     int late = 0, departure;
     std::vector<int> expected_times;
-    int stations_done = 0 ;
+    int stations_done = 0;
 
 public:
     Train(int i, int d, int n, std::vector<int> t)
@@ -26,14 +26,14 @@ public:
     }
     ~Train();
 
-    int get_train_name() const { return train_name; }
-    int get_velocity_curr() const { return velocity_curr; }
-    int get_velocity_max() const { return velocity_max; }
-    double get_distance() const { return distance; }
-    void set_velocity(int v) { velocity_curr = v; }
-    void set_distance(double d) { distance = d; }
-    int get_direction() const { return direction; }
-    int get_stations_done() const { return stations_done; }
+    inline int    get_train_name()       const { return train_name       ; }
+    inline int    get_velocity_curr()    const { return velocity_curr    ; }
+    inline int    get_velocity_max()     const { return velocity_max     ; }
+    inline double get_distance()         const { return distance         ; }
+    inline void   set_velocity(int v)          {        velocity_curr = v; }
+    inline void   set_distance(double d)       {        distance = d     ; }
+    inline int    get_direction()        const { return direction        ; }
+    inline int    get_stations_done()    const { return stations_done    ; }
 };
 
 class Fast_Train : public Train
