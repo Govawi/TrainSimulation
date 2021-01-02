@@ -51,7 +51,7 @@ void Line::vector_trains()
             int approx_time = 0;
             for (int i = 1; i < train_times.size(); i++)
             {
-                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(i).get_distance() - stations.at(i - 1).get_distance() - 10) / train_velocity_km_min) // 7.5 = 10/80/60
+                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(i).get_distance() - stations.at(i - 1).get_distance() - 10) / train_velocity_km_min); // 7.5 = 10/80/60
                 if (train_times.at(i) < approx_time) 
                 {
                     train_times.at(i) = approx_time;
@@ -70,7 +70,7 @@ void Line::vector_trains()
             int j = 0;
             for (int i = 1; i < train_times.size(); i++)
             {
-                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(main_indexes.at(j)).get_distance() - stations.at(main_indexes.at(j - 1)).get_distance() - 10) / train_velocity_km_min) // 7.5 = 10/80/60
+                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(main_indexes.at(j)).get_distance() - stations.at(main_indexes.at(j - 1)).get_distance() - 10) / train_velocity_km_min); // 7.5 = 10/80/60
                 if (train_times.at(i) < approx_time) 
                 {
                     train_times.at(i) = approx_time;

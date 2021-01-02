@@ -1,5 +1,4 @@
-#include <iostream>
-#include <vector>
+#include "src/line.cpp"
 
 using namespace std;
 
@@ -16,6 +15,7 @@ int main()
 
     // test
 
+    Line test();
 
     return 0;
 }
