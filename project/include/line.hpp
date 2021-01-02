@@ -25,7 +25,7 @@ public:
     }
     ~Line();
 
-    int schedule(int num_station,int type)
+    int schedule(int num_station, int type, std::vector<int>& times)
     {
         int velocity = 0;
         int time = 0;
@@ -39,11 +39,13 @@ public:
         time = times[num_station-1] + 10*80 + velocity * (stations[num_station].get_distance() - stations[num_station-1].get_distance());
     }
 
-    void check_times(vector<int>& times,int type)
+    void check_times(std::vector<int>& times,int type)
     {
+
         for(int i=0; i<times.size(); i++)
         {
-            if(times[i] < schedule(i,type))
+            if(times[i] < schedule(i,type,times))
+
         }
 
         while(times.size() < stations.size())
@@ -86,7 +88,7 @@ public:
             }
         }
         
-        check_times(vector<int> train_times,train_type);
+        check_times(std::vector<int> train_times,train_type);
         
         if(train_type==1)
             trains.push_back(Slow_Train(train_direction, train_number, train_times));                                          
