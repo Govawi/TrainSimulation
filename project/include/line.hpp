@@ -36,7 +36,7 @@ public:
         else
             velocity = 300;
         
-        time = times[num_station-1] + 10*80 + velocity * (stations[num_station].get_distance() - stations[num_stations-1].get_distance());
+        time = times[num_station-1] + 10*80 + velocity * (stations[num_station].get_distance() - stations[num_station-1].get_distance());
     }
 
     void check_times(vector<int>& times,int type)
