@@ -19,16 +19,23 @@ void Line::vector_trains()
     while (!file.eof())
     {
         std::getline(file, t);
+        std::cout<<t<<std::endl;
         int train_number = stoi(t.substr(0, t.find(' ')));
+        std::cout<<train_number<<std::endl;
         int train_direction = (int)(t.at(t.find(' ') + 1));
-        int train_type = (int)(t.at(t.find(' ') + 3));
+        int train_type = (int)(t.at(t.find(' ') + 1));
+        std::cout<<train_type<<std::endl;
 
-        t = t.substr(t.at(t.find(' ') + 5)); // only times
+        t = t.substr(t.at(t.find(' ')+5)); // only times
         std::vector<int> train_times;
             
+        //check if only times
+        std::cout<<t<<std::endl;
+
         int j = 0 ;
-        for (int i = 0; i < stations.size() && !t.empty(); i++)     //time_to_remove { 1 , 3 , 7 }   
+        for (int i = 0; i < stations.size() && !t.empty() ; i++)     //time_to_remove { 1 , 3 , 7 }   
         {   
+            std::cout<<"ciclo "<< i <<std::endl;
             if(i == time_to_remove.at(j))
             {
                 j++;
@@ -37,8 +44,8 @@ void Line::vector_trains()
             else
             {
                 train_times.push_back(stoi(t.substr(0,t.at(t.find(' ')))));
-                t = t.substr(0,t.at(t.find(' ')));
-                std::cout << "added time in station " << i << std::endl;
+                std::cout<<"insert: " << stoi(t.substr(0,t.at(t.find(' ')))) <<std::endl;
+                t = t.substr(t.at(t.find(' ')));
             }
         }
 
@@ -100,6 +107,8 @@ void Line::vector_trains()
             Fast_Train f(train_direction, train_number, train_times);
             trains.push_back(&f);
         }
+
+        std::cout << "end fo train" << std::endl;
     }
 }
 
@@ -122,7 +131,7 @@ void Line::vector_stations()
 
         if(distance - distance_old < 20)
         {
-            time_to_remove.push_back(count);
+            time_to_remove.push_back(count++);
             std::cout << "Station at " << distance << " km removed...distance from previous was less than 20 km" << std::endl;
         }
         
@@ -136,14 +145,14 @@ void Line::vector_stations()
     
             Main_Station ms(name,distance);
             stations.push_back(&ms);
-            std::cout << "Added Main station " << name << " at " << distance << "km from original station , " << "station number " << count <<std::endl;
+            std::cout << "Added Main station " << name << " at " << distance << "km from original station" <<std::endl;
             count++;
         }
         else if(type == 1)
         {
             Local_Station ls(name,distance);
             stations.push_back(&ls);
-            std::cout << "Added Local station " << name << " at " << distance << "km from original station , " << "station number " << count  << std::endl;
+            std::cout << "Added Local station " << name << " at " << distance << "km from original station" << std::endl;
             count++;
         }
         else
@@ -151,6 +160,7 @@ void Line::vector_stations()
             std::cout << "Missing station type in line : " << count << std::endl;
             throw std::exception();
         }
+        
         
     }
 }
