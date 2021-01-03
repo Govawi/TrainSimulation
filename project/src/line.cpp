@@ -10,7 +10,7 @@ Line::Line()
 void Line::vector_trains()
 {
     // file -> string
-    std::ifstream file("timetable.txt");
+    std::ifstream file("../timetable.txt");
     std::string t;
     while (!file.eof())
     {
@@ -93,7 +93,7 @@ void Line::vector_trains()
 void Line::vector_stations()
 {
     std::string l;
-    std::ifstream file("line_description.txt");
+    std::ifstream file("../line_description.txt");
     getline(file, l);
     //creare stazione origine e push_back
     stations.push_back(Main_Station(l,0));
