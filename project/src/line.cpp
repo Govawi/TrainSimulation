@@ -122,26 +122,28 @@ void Line::vector_stations()
 
         if(distance - distance_old < 20)
         {
-            time_to_remove.push_back(count++);
+            time_to_remove.push_back(count);
             std::cout << "Station at " << distance << " km removed...distance from previous was less than 20 km" << std::endl;
-            continue;
         }
-
-            distance_old = distance;
+        
+        distance_old = distance;
 
         int type = stoi(l.substr(l.rfind(' ') - 1, 1));
         std::string name = l.substr(0, l.rfind(' ') - 2);
         //creare stazioni
         if(type == 0)
         {
+    
             Main_Station ms(name,distance);
             stations.push_back(&ms);
+            std::cout << "Added Main station " << name << " at " << distance << "km from original station , " << "station number " << count <<std::endl;
             count++;
         }
         else if(type == 1)
         {
             Local_Station ls(name,distance);
             stations.push_back(&ls);
+            std::cout << "Added Local station " << name << " at " << distance << "km from original station , " << "station number " << count  << std::endl;
             count++;
         }
         else
@@ -149,6 +151,6 @@ void Line::vector_stations()
             std::cout << "Missing station type in line : " << count << std::endl;
             throw std::exception();
         }
-
+        
     }
 }

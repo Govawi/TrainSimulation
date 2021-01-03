@@ -17,27 +17,27 @@ void  Deposit::push(Train& t)
     t.set_velocity(0);
 }
 
-int  Deposit::pop()
+Train* Deposit::pop()
 {
     if (is_empty())
         throw std::length_error("** Deposit is mt **"); // https://www.youtube.com/watch?v=S2ihdoT2noo
 
     if (fast.size())
     {
-        int ret = fast.front()->get_train_name();
         fast.front()->set_velocity(80);
+        Train* ret = fast.front();
         fast.pop();
         return ret;
     }
     else if(medium.size())
     {
-        int ret = medium.front()->get_train_name();
         medium.front()->set_velocity(80);
+        Train* ret = medium.front();
         medium.pop();
         return ret;
     }
-    int ret = slow.front()->get_train_name();
     slow.front()->set_velocity(80);
+    Train* ret = slow.front();
     slow.pop();
     return ret;        
 }

@@ -17,7 +17,7 @@ public:
     //~Deposit();
     bool is_empty();
     void push(Train& t); //insert a train in the correct queue
-    int pop();          //pop the next train
+    Train* pop();        //pop a Train* 
 
 };
 
