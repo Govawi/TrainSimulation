@@ -55,11 +55,11 @@ void Line::vector_trains()
             int approx_time = 0;
             for (int i = 1; i < train_times.size(); i++)
             {
-                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(i).get_distance() - stations.at(i - 1).get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations[i]->get_distance() - stations[i - 1]->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
                 if (train_times.at(i) < approx_time) 
                 {
                     train_times.at(i) = approx_time;
-                    std::cout << "modified time for " << stations.at(i).get_name() << std::endl;
+                    std::cout << "modified time for " << stations[i]->get_name() << std::endl;
                 }
             }
         }
@@ -67,18 +67,18 @@ void Line::vector_trains()
         {
             std::vector<int> main_indexes; // assumiamo sia della stessa lunghezza di train_times
             for (int i = 0; i < stations.size(); i++)
-                if (!stations.at(i).is_local())
+                if (!stations[i]->is_local())
                     main_indexes.push_back(i);
                 
             int approx_time = 0;
             int j = 0;
             for (int i = 1; i < train_times.size(); i++)
             {
-                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(main_indexes.at(j)).get_distance() - stations.at(main_indexes.at(j - 1)).get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations[main_indexes.at(j)]->get_distance() - stations[main_indexes.at(j - 1)]->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
                 if (train_times.at(i) < approx_time) 
                 {
                     train_times.at(i) = approx_time;
-                    std::cout << "modified time for " << stations.at(main_indexes.at(j)).get_name() << std::endl;
+                    std::cout << "modified time for " << stations[main_indexes.at(j)]->get_name() << std::endl;
                 }
             }
         }
@@ -86,11 +86,20 @@ void Line::vector_trains()
         //Creazione treni
         
         if(train_type==1)
-            trains.push_back(Slow_Train(train_direction, train_number, train_times));                                          
+        {
+            Slow_Train s(train_direction, train_number, train_times);
+            trains.push_back(&s);    
+        }                                    
         if(train_type==2)
-            trains.push_back(Medium_Train(train_direction, train_number, train_times));
+        {
+            Medium_Train m(train_direction, train_number, train_times);
+            trains.push_back(&m);
+        }
         if(train_type==3)
-            trains.push_back(Fast_Train(train_direction, train_number, train_times));
+        {
+            Fast_Train f(train_direction, train_number, train_times);
+            trains.push_back(&f);
+        }
     }
 }
 
@@ -100,7 +109,7 @@ void Line::vector_stations()
     std::ifstream file("line_description.txt");
     getline(file, l);
     //creare stazione origine e push_back
-    stations.push_back(Main_Station(l,0));
+    stations.push_back(&Main_Station(l,0));
     int distance_old = 0;
     int count = 0;
         
@@ -124,12 +133,12 @@ void Line::vector_stations()
         //creare stazioni
         if(type == 0)
         {
-            stations.push_back(Main_Station(name,distance));
+            stations.push_back(&Main_Station(name,distance));
             count++;
         }
         else if(type == 1)
         {
-            stations.push_back(Local_Station(name,distance));
+            stations.push_back(&Local_Station(name,distance));
             count++;
         }
         else
