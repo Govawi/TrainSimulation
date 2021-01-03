@@ -5,11 +5,11 @@ bool Deposit::is_empty()
     return !fast.size() && !medium.size() && !slow.size();
 }
 
-void  Deposit::push(Train& t)
+void Deposit::push(Train &t)
 {
-    if(t.get_velocity_max() == 300)
+    if (t.get_velocity_max() == 300)
         fast.push(&t);
-    else if(t.get_velocity_max() == 240)
+    else if (t.get_velocity_max() == 240)
         medium.push(&t);
     else
         slow.push(&t);
@@ -17,7 +17,7 @@ void  Deposit::push(Train& t)
     t.set_velocity(0);
 }
 
-Train* Deposit::pop()
+Train *Deposit::pop()
 {
     if (is_empty())
         throw std::length_error("** Deposit is mt **"); // https://www.youtube.com/watch?v=S2ihdoT2noo
@@ -25,19 +25,19 @@ Train* Deposit::pop()
     if (fast.size())
     {
         fast.front()->set_velocity(80);
-        Train* ret = fast.front();
+        Train *ret = fast.front();
         fast.pop();
         return ret;
     }
-    else if(medium.size())
+    else if (medium.size())
     {
         medium.front()->set_velocity(80);
-        Train* ret = medium.front();
+        Train *ret = medium.front();
         medium.pop();
         return ret;
     }
     slow.front()->set_velocity(80);
-    Train* ret = slow.front();
+    Train *ret = slow.front();
     slow.pop();
-    return ret;        
+    return ret;
 }

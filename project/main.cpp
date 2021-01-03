@@ -10,12 +10,9 @@ int main()
 {
     // base operations
 
-
     // read line_description.txt
 
-
     // read timetables.txt
-
 
     // test
     /*
@@ -39,4 +36,3 @@ int main()
 
     return 0;
 }
-

@@ -8,6 +8,8 @@
 class Line
 {
 private:
+    std::vector<Main_Station> main_stations;
+    std::vector<Local_Station> local_stations;
     std::vector<Train*> trains;
     std::vector<Station*> stations;
     std::vector<int> time_to_remove;
