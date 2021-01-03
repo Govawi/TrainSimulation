@@ -178,14 +178,16 @@ void Line::vector_stations()
         //creare stazioni
         if (type == 0)
         {
-            main_stations.push_back(Main_Station(name, distance));
+            Main_Station ms(name,distance);
+            main_stations.push_back(ms);
             stations.push_back(&main_stations.back());
             std::cout << "  Added Main station " << name << " at " << distance << "km from original station" << std::endl;
             count++;
         }
         else if (type == 1)
         {
-            local_stations.push_back(Local_Station(name, distance));
+            Local_Station ls(name,distance);
+            local_stations.push_back(ls);
             stations.push_back(&local_stations.back());
             std::cout << "      Added Local station " << name << " at " << distance << "km from original station" << std::endl;
             count++;
@@ -196,4 +198,8 @@ void Line::vector_stations()
             throw std::exception();
         }
     }
+
+    std::cout<<stations.size()<<std::endl;
+    for(int i=0; i<stations.size();i++)
+        std::cout<<"station "<< i << " name: "<< stations.at(i)->get_distance() <<std::endl;
 }
