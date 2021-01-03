@@ -24,7 +24,7 @@ void Line::vector_trains()
         std::cout<<train_number<<std::endl;
         int train_direction = (int)(t.at(t.find(' ') + 1));
         std::cout<<train_direction<<std::endl;
-        int train_type = (int)(t.at(t.find(' ') + 1));
+        int train_type = (int)(t.at(t.find(' ') + 3));
         std::cout<<train_type<<std::endl;
 
         t = t.substr(t.at(t.find(' ')+5)); // only times
