@@ -19,7 +19,7 @@ private:
 
 public:
     Line();
-    ~Line();
+    //~Line();
     
     void vector_trains();
     void vector_stations();

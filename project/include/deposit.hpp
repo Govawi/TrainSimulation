@@ -14,7 +14,7 @@ private:
 
 public:
     Deposit() : fast{}, medium{}, slow{} {}
-    ~Deposit();
+    //~Deposit();
     bool is_empty();
     void push(Train t); //insert a train in the correct queue
     int pop();          //pop the next train

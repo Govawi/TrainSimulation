@@ -27,7 +27,7 @@ public:
         Deposit dep_right();
         Deposit dep_left();
     }
-    ~Station();
+    //~Station();
 
     std::string get_name() const { return name; }
     double get_distance() const { return distance; }

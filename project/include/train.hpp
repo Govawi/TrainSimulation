@@ -2,7 +2,7 @@
 #define train
 
 #include <string>
-#include "station.hpp"
+#include <vector>
 
 class Train
 {
@@ -18,7 +18,7 @@ protected:
 
 public:
     Train(int i, int d, int n, std::vector<int> t);
-    ~Train();
+    //~Train();
 
     inline int    get_train_name()       const { return train_name       ; }
     inline int    get_velocity_curr()    const { return velocity_curr    ; }
