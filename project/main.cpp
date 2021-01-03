@@ -34,8 +34,8 @@ int main()
         cout << "name: "<< prova[i]->get_train_name() << endl;
     }
     */
-   
-    Line test();
+
+    Line test;
 
     return 0;
 }
