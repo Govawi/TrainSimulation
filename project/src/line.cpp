@@ -109,7 +109,8 @@ void Line::vector_stations()
     std::ifstream file("line_description.txt");
     getline(file, l);
     //creare stazione origine e push_back
-    stations.push_back(&Main_Station(l,0));
+    Main_Station m(l,0);
+    stations.push_back(&m);
     int distance_old = 0;
     int count = 0;
         
@@ -133,12 +134,14 @@ void Line::vector_stations()
         //creare stazioni
         if(type == 0)
         {
-            stations.push_back(&Main_Station(name,distance));
+            Main_Station ms(name,distance);
+            stations.push_back(&ms);
             count++;
         }
         else if(type == 1)
         {
-            stations.push_back(&Local_Station(name,distance));
+            Local_Station ls(name,distance);
+            stations.push_back(&ls);
             count++;
         }
         else
