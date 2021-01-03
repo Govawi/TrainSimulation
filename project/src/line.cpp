@@ -23,6 +23,7 @@ void Line::vector_trains()
         int train_number = stoi(t.substr(0, t.find(' ')));
         std::cout<<train_number<<std::endl;
         int train_direction = (int)(t.at(t.find(' ') + 1));
+        std::cout<<train_direction<<std::endl;
         int train_type = (int)(t.at(t.find(' ') + 1));
         std::cout<<train_type<<std::endl;
 
