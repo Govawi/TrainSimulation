@@ -1,12 +1,7 @@
 #ifndef line
 #define line
 
-#include <queue>
-#include <iostream>
-#include <fstream>
-#include <string>
 #include <vector>
-#include <cmath>
 #include "station.hpp"
 #include "train.hpp"
 
