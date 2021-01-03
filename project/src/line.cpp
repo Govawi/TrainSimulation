@@ -10,7 +10,7 @@ Line::Line()
 void Line::vector_trains()
 {
     // file -> string
-    std::ifstream file("timetable.txt");
+    std::ifstream file("timetables.txt");
     std::string t;
     while (!file.eof())
     {
