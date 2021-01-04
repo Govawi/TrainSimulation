@@ -81,10 +81,10 @@ void Line::vector_trains()
 
         if (train_type == 1)
         {
-            int approx_time = 0;
+            double approx_time = 0;
             for (int i = 1; i < train_times.size(); i++)
             {
-                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations[i]->get_distance() - stations[i - 1]->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
                 
                 std::cout<< "time from table: "<< train_times.at(i) << " estimated time: " << approx_time << std::endl;
                 
@@ -165,8 +165,9 @@ void Line::vector_stations()
         {
             time_to_remove.push_back(count++);
             std::cout << "Station at " << distance << " km removed...distance from previous was less than 20 km" << std::endl;
+            continue;
         }
-
+        
         distance_old = distance;
 
         int type = stoi(l.substr(l.rfind(' ') - 1, 1));
@@ -191,6 +192,7 @@ void Line::vector_stations()
             std::cout << "Missing station type in line : " << count << std::endl;
             throw std::exception();
         }
+        
     }
 
 }
