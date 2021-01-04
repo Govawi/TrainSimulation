@@ -31,25 +31,23 @@ void Line::vector_trains()
     std::cout << "|" << std::endl;
     // --------------
 
+    // input stream
     std::ifstream filett("timetables.txt");
     std::string t;
     while (!filett.eof())
     {
         std::getline(filett, t);
-        std::stringstream st(t);
 
-        int train_number;
-        int train_direction;
-        int train_type;
+        int train_number = stoi(t.substr(0, t.find(' ')));
+        int train_direction = stoi(t.substr(t.find(' ') + 1, 1));
+        int train_type = stoi(t.substr(t.find(' ') + 3, 1));
+
+        t = t.substr(t.find(' ') + 5);
         std::vector<double> train_times;
+        train_times.push_back(stod(t.substr(0, t.find(' '))));
+        t = t.substr(t.find(' ') + 1);
 
-        st >> train_number;
-        st >> train_direction;
-        st >> train_type;
-        double tmp;
-        st >> tmp;
-        train_times.push_back(tmp);
-
+        // need to distinguish train velocity
         double train_velocity_km_min;
         switch (train_type)
         {
@@ -63,32 +61,44 @@ void Line::vector_trains()
             train_velocity_km_min = 300 / 60;
             break;
         }
-        int k = 0;
+
+        int k = 0; // counter for removed stations
+
+        // need a time for all stations
         if (train_type == 1)
         {
-            for (int i = 1; i < stations.size() && st.gcount(); i++)
+            for (int i = 1; i < stations.size() && !t.empty(); i++)
             {
+                std::cout << "entra ciclo gne\n";
                 if (i == time_to_remove.at(k))
                 {
-                    st >> tmp;
+                    t = t.substr(t.find(' ') + 1);
                     k++;
+                    i--;
+                    std::cout << "rimosso " << i << std::endl;
                     continue;
                 }
-                st >> tmp;
+                double tmp = stod(t.substr(0, t.find(' ')));
                 double approx_time = train_times.back() + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
 
                 if (tmp < approx_time)
                     tmp = approx_time;
 
+                std::cout << "inserito " << tmp << std::endl;
                 train_times.push_back(tmp);
+                t = t.substr(t.find(' ') + 1);
             }
+
+            // fill all remaining stations
             for (int i = train_times.size(); i < stations.size(); i++)
             {
                 double approx_time = train_times.back() + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min;
+                std::cout << "inserito " << approx_time << std::endl;
                 train_times.push_back(approx_time);
             }
         }
 
+        // need a time for main stations only
         else if (train_type == 2 || train_type == 3)
         {
             std::vector<int> main_indexes;
@@ -97,11 +107,117 @@ void Line::vector_trains()
                     main_indexes.push_back(i);
 
             int j = 1;
-            for (int i = 1; i < train_times.size(); i++)
+            for (int i = 1; i < train_times.size() && !t.empty(); i++)
+            {
+                if (i == time_to_remove.at(k))
+                {
+                    t = t.substr(t.find(' ') + 1);
+                    k++;
+                    continue;
+                }
+                double tmp = stod(t.substr(0, t.find(' ')));
+                double approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(main_indexes.at(j))->get_distance() - stations.at(main_indexes.at(j - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+
+                if (tmp < approx_time)
+                    tmp = approx_time;
+
+                train_times.push_back(tmp);
+                t = t.substr(t.find(' ') + 1);
+                j++;
+            }
+
+            // fill remaining main stations
+            for (int i = train_times.size(); i < main_indexes.size(); i++)
+            {
+                double approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(main_indexes.at(j))->get_distance() - stations.at(main_indexes.at(j - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                std::cout << "inserito " << approx_time << std::endl;
+                train_times.push_back(approx_time);
+                j++;
+            }
+        }
+
+/*
+        // line by line with stringstream
+        std::getline(filett, t);
+        std::stringstream st(t);
+
+        int train_number;
+        int train_direction;
+        int train_type;
+        std::vector<double> train_times;
+
+        // saving all variables
+        st >> train_number;
+        st >> train_direction;
+        st >> train_type;
+        double tmp;
+        st >> tmp;
+        train_times.push_back(tmp);
+
+        // need to distinguish train velocity
+        double train_velocity_km_min;
+        switch (train_type)
+        {
+        case 1:
+            train_velocity_km_min = 160 / 60;
+            break;
+        case 2:
+            train_velocity_km_min = 240 / 60;
+            break;
+        case 3:
+            train_velocity_km_min = 300 / 60;
+            break;
+        }
+
+        int k = 0; // counter for removed stations
+
+        // need a time for all stations
+        if (train_type == 1)
+        {
+            for (int i = 1; i < stations.size() && st.peek() != EOF; i++)
+            {
+                std::cout<<"entra ciclo gne\n";
+                if (i == time_to_remove.at(k))
+                {
+                    st >> tmp;
+                    k++;
+                    std::cout << "rimosso " << tmp << std::endl;
+                    continue;
+                }
+                st >> tmp;
+                double approx_time = train_times.back() + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+
+                if (tmp < approx_time)
+                    tmp = approx_time;
+
+                std::cout << "inserito " << tmp << std::endl;
+                train_times.push_back(tmp);
+            }
+
+            // fill all remaining stations
+            for (int i = train_times.size(); i < stations.size(); i++)
+            {
+                double approx_time = train_times.back() + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min;
+                std::cout << "inserito " << approx_time << std::endl;
+                train_times.push_back(approx_time);
+            }
+        }
+
+        // need a time for main stations only
+        else if (train_type == 2 || train_type == 3)
+        {
+            std::vector<int> main_indexes;
+            for (int i = 0; i < stations.size(); i++)
+                if (!stations[i]->is_local())
+                    main_indexes.push_back(i);
+
+            int j = 1;
+            for (int i = 1; i < train_times.size() && st.peek() != EOF; i++)
             {
                 if (i == time_to_remove.at(k))
                 {
                     st >> tmp;
+                    std::cout << "rimosso " << tmp << std::endl;
                     k++;
                     continue;
                 }
@@ -111,17 +227,21 @@ void Line::vector_trains()
                 if (tmp < approx_time)
                     tmp = approx_time;
 
+                std::cout << "inserito " << tmp << std::endl;
                 train_times.push_back(tmp);
                 j++;
             }
+
+            // fill remaining main stations
             for (int i = train_times.size(); i < main_indexes.size(); i++)
             {
                 double approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(main_indexes.at(j))->get_distance() - stations.at(main_indexes.at(j - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                std::cout << "inserito " << approx_time << std::endl;
                 train_times.push_back(approx_time);
                 j++;
             }
         }
-
+*/
         if (train_type == 1)
         {
             std::unique_ptr<Train> tr{new Slow_Train(train_direction, train_number, train_times)};
@@ -141,6 +261,8 @@ void Line::vector_trains()
             std::cout << "constructed Fast train: " << train_number << " - dir: " << train_direction << std::endl;
         }
     }
+
+    filett.close();
 }
 
 void Line::vector_stations()
@@ -155,7 +277,7 @@ void Line::vector_stations()
 
     std::ifstream fileld("line_description.txt");
     std::string s;
-    int remove = 0;
+    int remove = 1;
 
     std::getline(fileld, s);
     std::unique_ptr<Station> foo{new Main_Station(s, 0)};
@@ -166,7 +288,7 @@ void Line::vector_stations()
     {
         std::getline(fileld, s);
 
-        double station_distance = (double)stoi(s.substr(s.rfind(' ')));
+        double station_distance = stod(s.substr(s.rfind(' ')));
         int station_type = stoi(s.substr(s.rfind(' ') - 1, 1));
         std::string station_name = s.substr(0, s.rfind(' ') - 2);
 
@@ -193,6 +315,8 @@ void Line::vector_stations()
             remove++;
         }
     }
+
+    fileld.close();
 }
 
 void Line::print_stations() const
