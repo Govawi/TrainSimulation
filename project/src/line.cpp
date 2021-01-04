@@ -5,6 +5,7 @@
 #include <cmath>
 
 Line::Line()
+    : line_st{}
 {
     std::cout << std::endl;
     std::cout << "**********************" << std::endl;
@@ -12,6 +13,7 @@ Line::Line()
     std::cout << "**********************" << std::endl;
     std::cout << "|" << std::endl;
     vector_stations();
+    std::cout << std::endl;
     std::cout << "> Stations Input OK" << std::endl;
     
     std::cout << std::endl;
@@ -20,6 +22,7 @@ Line::Line()
     std::cout << "**********************" << std::endl;
     std::cout << "|" << std::endl;
     vector_trains();
+    std::cout << std::endl;
     std::cout << "> Trains Input OK" << std::endl;
 }
 
@@ -131,18 +134,18 @@ void Line::vector_trains()
 
         if (train_type == 1)
         {
-            Slow_Train s(train_direction, train_number, train_times);
-            trains.push_back(&s);
+            line_st.add_slow(train_direction,train_number,train_times);
+            trains.push_back(line_st.get_slow_at(line_st.get_num_slow()-1));
         }
         if (train_type == 2)
         {
-            Medium_Train m(train_direction, train_number, train_times);
-            trains.push_back(&m);
+            line_st.add_medium(train_direction,train_number,train_times);
+            trains.push_back(line_st.get_medium_at(line_st.get_num_medium()-1));
         }
         if (train_type == 3)
         {
-            Fast_Train f(train_direction, train_number, train_times);
-            trains.push_back(&f);
+            line_st.add_fast(train_direction,train_number,train_times);
+            trains.push_back(line_st.get_fast_at(line_st.get_num_fast()-1));
         }
 
         std::cout << "  end fo train" << std::endl;
@@ -155,8 +158,9 @@ void Line::vector_stations()
     std::ifstream file("line_description.txt");
     getline(file, l);
     //creare stazione origine e push_back
-    Main_Station m(l, 0);
-    stations.push_back(&m);
+    line_st.add_main(l,0);
+    stations.push_back(line_st.get_main_at(0));
+    std::cout << "Added Origin station " << l << std::endl;
     int distance_old = 0;
     int count = 0;
 
@@ -168,7 +172,7 @@ void Line::vector_stations()
         if (distance - distance_old < 20)
         {
             time_to_remove.push_back(count++);
-            std::cout << "  Station at " << distance << " km removed...distance from previous was less than 20 km" << std::endl;
+            std::cout << "Station at " << distance << " km removed...distance from previous was less than 20 km" << std::endl;
         }
 
         distance_old = distance;
@@ -178,18 +182,16 @@ void Line::vector_stations()
         //creare stazioni
         if (type == 0)
         {
-            Main_Station ms(name,distance);
-            main_stations.push_back(ms);
-            stations.push_back(&main_stations.back());
-            std::cout << "  Added Main station " << name << " at " << distance << "km from original station" << std::endl;
+            line_st.add_main(name,distance);
+            stations.push_back(line_st.get_main_at(line_st.get_num_main()-1));
+            std::cout << "Added Main station " << name << " at " << distance << "km" << std::endl;
             count++;
         }
         else if (type == 1)
         {
-            Local_Station ls(name,distance);
-            local_stations.push_back(ls);
-            stations.push_back(&local_stations.back());
-            std::cout << "      Added Local station " << name << " at " << distance << "km from original station" << std::endl;
+            line_st.add_local(name,distance);
+            stations.push_back(line_st.get_local_at(line_st.get_num_local()-1));
+            std::cout << "Added Local station " << name << " at " << distance << "km" << std::endl;
             count++;
         }
         else
@@ -199,7 +201,4 @@ void Line::vector_stations()
         }
     }
 
-    std::cout<<stations.size()<<std::endl;
-    for(int i=0; i<stations.size();i++)
-        std::cout<<"station "<< i << " name: "<< stations.at(i)->get_distance() <<std::endl;
 }
