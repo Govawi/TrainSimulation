@@ -118,17 +118,17 @@ void Line::vector_trains()
         if(train_type == 1)
         {
             std::unique_ptr<Train> tr {new Slow_Train(train_direction, train_number, train_times)};
-            trains.push_back(tr);
+            trains.push_back(std::move(tr));
         }
         else if(train_type == 2)
         {
             std::unique_ptr<Train> tr {new Medium_Train(train_direction, train_number, train_times)};
-            trains.push_back(tr);
+            trains.push_back(std::move(tr));
         }
         else
         {
             std::unique_ptr<Train> tr {new Fast_Train(train_direction, train_number, train_times)};
-            trains.push_back(tr);
+            trains.push_back(std::move(tr));
         }
     }
 }
@@ -140,22 +140,28 @@ void Line::vector_stations()
     double distance_old = 0;
     int remove = 0;
 
+    // bbbb cccc dddd 1 22
+    // DOBBIAMO FARE IL CASO 1
+
     while (!file.eof())
     {
         std::getline(file, s);
-
-        int a = s.find_first_of('0');
-        if(a > s.find_first_of('1'))
-            a = s.find_first_of('1');
-        std::string station_name = s.substr(0,a);
-
-        s = s.substr(a+1);
         std::stringstream ss(s);
+        std::string station_name = "";
+        std::string tmp = "a";
+        while (isalpha(ss.peek()) || ss.peek() == ' ')
+        {
+            ss >> tmp;
+            station_name = station_name + " " + tmp;
+        }
+        std::cout << station_name << " kappa gay cocco puttano lecca fighe" << std::endl;
         
         int station_type;
         double station_distance;
         ss >> station_type;
         ss >> station_distance;
+
+        std::cout<<station_name<<" "<<station_type<<" "<<station_distance<<std::endl;
 
         if(station_distance - distance_old < 20)
         {
@@ -171,13 +177,13 @@ void Line::vector_stations()
         {
             
             std::unique_ptr<Station> foo{new Main_Station(station_name,station_distance)};
-            stations.push_back(foo);
+            stations.push_back(std::move(foo));
             remove++;
         }
         else if(station_type == 1)
         {
             std::unique_ptr<Station> foo{new Local_Station(station_name,station_distance)};
-            stations.push_back(foo);
+            stations.push_back(std::move(foo));
             remove++;
         }
         else
