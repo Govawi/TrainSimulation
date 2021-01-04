@@ -29,6 +29,7 @@ public:
     inline void   set_distance(double d)       {        distance = d     ; }
     inline int    get_direction()        const { return direction        ; }
     inline int    get_stations_done()    const { return stations_done    ; }
+           void   print_times()          const;
 };
 
 class Fast_Train : public Train

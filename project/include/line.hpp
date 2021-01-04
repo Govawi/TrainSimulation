@@ -48,6 +48,8 @@ public:
     
     void vector_trains();
     void vector_stations();
+    void print_line();
+    void print_train();
 };
 
 #endif

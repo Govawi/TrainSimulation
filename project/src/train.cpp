@@ -7,3 +7,9 @@ Train::Train(int i, int d, int n, std::vector<int> t)
     distance = 0;
     expected_times = t;
 }
+
+void Train::print_times() const
+{
+    for(int i=0; i<expected_times.size(); i++)
+        std::cout<< "Stazione "<< i << " : " << expected_times.at(i) << std::endl;
+}
