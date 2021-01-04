@@ -1,5 +1,5 @@
-#ifndef train
-#define train
+#ifndef train_hpp
+#define train_hpp
 
 #include <string>
 #include <vector>
@@ -8,7 +8,7 @@
 class Train
 {
 protected:
-    const int train_name;
+    const int train_number;
     int velocity_curr;
     const int velocity_max;
     double distance;
@@ -19,17 +19,16 @@ protected:
 
 public:
     Train(int i, int d, int n, std::vector<double> t);
-    //~Train();
 
-    inline int    get_train_name()       const { return train_name       ; }
-    inline int    get_velocity_curr()    const { return velocity_curr    ; }
-    inline int    get_velocity_max()     const { return velocity_max     ; }
-    inline double get_distance()         const { return distance         ; }
-    inline void   set_velocity(int v)          {        velocity_curr = v; }
-    inline void   set_distance(double d)       {        distance = d     ; }
-    inline int    get_direction()        const { return direction        ; }
-    inline int    get_stations_done()    const { return stations_done    ; }
-           void   print_times()          const;
+    inline int get_train_name() const { return train_number; }
+    inline int get_velocity_curr() const { return velocity_curr; }
+    inline int get_velocity_max() const { return velocity_max; }
+    inline double get_distance() const { return distance; }
+    inline void set_velocity(int v) { velocity_curr = v; }
+    inline void set_distance(double d) { distance = d; }
+    inline int get_direction() const { return direction; }
+    inline int get_stations_done() const { return stations_done; }
+    void print() const;
 };
 
 class Fast_Train : public Train

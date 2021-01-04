@@ -1,5 +1,5 @@
-#ifndef station
-    #define station
+#ifndef station_hpp
+#define station_hpp
 
 #include "deposit.hpp"
 #include "train.hpp"
@@ -18,26 +18,18 @@ protected:
     Deposit dep_right;
 
 public:
-    Station(std::string n, double d, bool type)
-        : local{type}
-    {
-        name = n;
-        distance = d;
+    Station(std::string n, double d, bool type);
 
-        Deposit dep_right();
-        Deposit dep_left();
-    }
-    //~Station();
-
-    std::string get_name() const { return name; }
-    double get_distance() const { return distance; }
-    bool is_local() const { return local; }
+    inline std::string get_name() const { return name; }
+    inline double get_distance() const { return distance; }
+    inline bool is_local() const { return local; }
+    void print() const;
 };
 
 class Main_Station : public Station
 {
 public:
-    Main_Station(std::string n, double d) : Station(n, d, false){}
+    Main_Station(std::string n, double d) : Station(n, d, false) {}
 };
 
 class Local_Station : public Station
