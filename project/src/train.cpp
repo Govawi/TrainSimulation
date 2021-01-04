@@ -1,6 +1,6 @@
 #include "../include/train.hpp"
 
-Train::Train(int i, int d, int n, std::vector<int> t)
+Train::Train(int i, int d, int n, std::vector<double> t)
     : velocity_max{i}, direction{d}, train_name{n}
 {
     velocity_curr = 0;

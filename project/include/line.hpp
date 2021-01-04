@@ -1,15 +1,19 @@
 #ifndef line
 #define line
 
+#include <memory>
 #include <vector>
 #include "station.hpp"
 #include "train.hpp"
 
+/*
 class Line_Storage
 {
 private:
     std::vector<Main_Station> main_stations;
     std::vector<Local_Station> local_stations;
+
+    
 
     std::vector<Fast_Train> fast_train;
     std::vector<Medium_Train> medium_train;
@@ -33,14 +37,16 @@ public:
     inline int get_num_medium() { return medium_train.size(); }
     inline int get_num_slow() { return slow_train.size(); }
 };
+*/
 
 class Line
 {
 private:
-    std::vector<Train*> trains;
-    std::vector<Station*> stations;
+
+    std::vector<std::unique_ptr<Station>> stations;
+    std::vector<std::unique_ptr<Train>> trains;
     std::vector<int> time_to_remove;
-    Line_Storage line_st;
+    //Line_Storage line_st;
 
 public:
     Line();
@@ -48,8 +54,6 @@ public:
     
     void vector_trains();
     void vector_stations();
-    void print_line();
-    void print_train();
 };
 
 #endif
