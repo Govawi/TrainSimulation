@@ -62,7 +62,7 @@ void Line::vector_trains()
             break;
         }
 
-        int k = 0; // counter for removed stations
+        int k = 1; // counter for removed stations
 
         // need a time for all stations
         if (train_type == 1)
@@ -75,7 +75,7 @@ void Line::vector_trains()
                     t = t.substr(t.find(' ') + 1);
                     k++;
                     i--;
-                    std::cout << "rimosso " << i << std::endl;
+                    std::cout << "rimosso " << k << std::endl;
                     continue;
                 }
                 double tmp = stod(t.substr(0, t.find(' ')));
