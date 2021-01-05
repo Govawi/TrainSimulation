@@ -62,7 +62,7 @@ void Line::vector_trains()
             break;
         }
 
-        int k = 1; // counter for removed stations
+        int k = 0; // counter for removed stations
 
         // need a time for all stations
         if (train_type == 1)
