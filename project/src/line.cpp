@@ -96,17 +96,35 @@ void Line::vector_trains()
             }
 
             std::cout << "All times saved" << std::endl;
-
-            for (int i = 1; i < not_approx_times.size(); i++)
+            
+            if(train_direction == 0)
             {
-                double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
-                std::cout << not_approx_times.at(i) << "  approx: " << approx_time << "velocity of train: " << train_velocity_km_min << std::endl;
-                if(i == 1)
-                    approx_time = approx_time - 5;
-                if (not_approx_times.at(i) < approx_time)
+                for (int i = 1; i < not_approx_times.size(); i++)
                 {
-                    std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
-                    not_approx_times.at(i) = approx_time;
+                    double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                    std::cout << not_approx_times.at(i) << "  approx: " << approx_time << "velocity of train: " << train_velocity_km_min << std::endl;
+                    if(i == 1)
+                        approx_time = approx_time - 5;
+                    if (not_approx_times.at(i) < approx_time)
+                    {
+                        std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
+                        not_approx_times.at(i) = approx_time;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i < not_approx_times.size(); i++)
+                {
+                    double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(not_approx_times.size() - i)->get_distance() - stations.at(not_approx_times.size() - i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                    std::cout << not_approx_times.at(i) << "  approx: " << approx_time << "velocity of train: " << train_velocity_km_min << std::endl;
+                    if(i == 1)
+                        approx_time = approx_time - 5;
+                    if (not_approx_times.at(i) < approx_time)
+                    {
+                        std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
+                        not_approx_times.at(i) = approx_time;
+                    }
                 }
             }
         }
@@ -135,16 +153,34 @@ void Line::vector_trains()
 
             std::cout << "All times saved" << std::endl;
 
-            for (int i = 1; i < not_approx_times.size(); i++)
+            if(train_direction == 0)
             {
-                double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(main_indexes.at(i))->get_distance() - stations.at(main_indexes.at(i - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
-                std::cout << not_approx_times.at(i) << "  approx: " << approx_time << std::endl;
-                if(i == 1)
-                    approx_time = approx_time - 5;
-                if (not_approx_times.at(i) < approx_time)
+                for (int i = 1; i < not_approx_times.size(); i++)
                 {
-                    std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
-                    not_approx_times.at(i) = approx_time;
+                    double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(main_indexes.at(i))->get_distance() - stations.at(main_indexes.at(i - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                    std::cout << not_approx_times.at(i) << "  approx: " << approx_time << std::endl;
+                    if(i == 1)
+                        approx_time = approx_time - 5;
+                    if (not_approx_times.at(i) < approx_time)
+                    {
+                        std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
+                        not_approx_times.at(i) = approx_time;
+                    }
+                }
+            }
+            else 
+            {
+                for (int i = 1; i < not_approx_times.size(); i++)
+                {
+                    double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(main_indexes.at(not_approx_times.size() - i))->get_distance() - stations.at(main_indexes.at(not_approx_times.size() - i - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                    std::cout << not_approx_times.at(i) << "  approx: " << approx_time << std::endl;
+                    if(i == 1)
+                        approx_time = approx_time - 5;
+                    if (not_approx_times.at(i) < approx_time)
+                    {
+                        std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
+                        not_approx_times.at(i) = approx_time;
+                    }
                 }
             }
         }
