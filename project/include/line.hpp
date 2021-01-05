@@ -15,6 +15,7 @@ private:
     std::vector<std::unique_ptr<Train>> trains;
     /** @brief Vector containing indexes of removed stations. */
     std::vector<int> time_to_remove;
+    std::vector<int> time_to_remove_main;
 
 public:
     /**
