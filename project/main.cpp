@@ -1,6 +1,5 @@
-#include "src/train.cpp"
-#include "src/station.cpp"
 #include "src/line.cpp"
+#include "src/simulation.cpp"
 #include <iostream>
 #include <vector>
 
@@ -8,7 +7,7 @@ using namespace std;
 
 int main()
 {
-    Line test;
-
+    //Line test;
+    Simulation sim;
     return 0;
 }

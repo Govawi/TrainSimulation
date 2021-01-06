@@ -27,6 +27,7 @@ public:
     inline void set_velocity(int v) { velocity_curr = v; }
     inline void set_distance(double d) { distance = d; }
     inline int get_direction() const { return direction; }
+    inline double get_expected_time(int index) const { return expected_times.at(index); }
     inline int get_stations_done() const { return stations_done; }
     void print() const;
 };

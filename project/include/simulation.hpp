@@ -4,12 +4,13 @@ class Simulation
 {
 private:
     Line line;
-    //vector<Train> attualmente in circolo
+    
 
 
 public:
     Simulation();
 
+    void departure();
     //funzioni
     /*
     funzione che fa partire i treni                                         -> departure()

@@ -4,6 +4,7 @@
 #include <string>
 #include <cmath>
 #include <sstream>
+#include <algorithm>
 
 Line::Line()
 {
@@ -19,6 +20,9 @@ Line::Line()
     std::cout << std::endl;
     print_stations();
     print_trains();
+    print_departure();
+    sort_trains();
+    print_departure();
 }
 
 void Line::vector_trains()
@@ -272,6 +276,41 @@ void Line::print_trains() const
 {
     for (int i = 0; i < trains.size(); i++)
         trains.at(i)->print();
+}
+
+void Line::push_train()
+{
+    if(trains.front()->get_direction() == 0)
+        line_left_right.push_back(trains.front());
+    else
+        line_right_left.push_back(trains.front());
+    trains.erase(trains.begin());
+}
+
+void Line::sort_trains()
+{
+    double key;
+    int j;
+
+    for(int i = 0; i < trains.size(); i++)
+    {
+        key = trains.at(i)->get_expected_time(0);
+        j = i - 1;
+
+        while( j >= 0 && trains.at(j)->get_expected_time(0) > key )
+        {
+            swap(trains.at(j+1),trains.at(j));
+            j = j - 1;
+        }
+    }
+}
+
+void Line::print_departure()
+{
+    for(int i=0; i<trains.size(); i++)
+    {
+        std::cout << "Train "<<trains.at(i)->get_train_name()<<" departure at : "<<trains.at(i)->get_expected_time(0)<<std::endl;
+    }
 }
 
 /*

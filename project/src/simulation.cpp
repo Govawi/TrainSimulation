@@ -14,3 +14,8 @@ Simulation::Simulation()
         */
     }
 }
+
+void Simulation::departure()
+{
+    
+}
