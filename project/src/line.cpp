@@ -1,4 +1,4 @@
-#include "../include/line.hpp"
+#include "line.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -279,24 +279,6 @@ void Line::print_trains() const
         trains.at(i)->print();
 }
 
-void Line::departure_next_train(int index)
-{
-    while(trains.front()->get_expected_time(0) == index)
-    {
-        if(trains.front()->get_direction() == 0)
-        {
-            line_left_right.push_back(std::move(trains.front()));
-            std::cout << trains.front()->get_train_name() << " " << line_left_right.front()->get_train_name() << std::endl;
-        }
-        else
-        {
-            line_right_left.push_back(std::move(trains.front()));
-            std::cout << trains.front()->get_train_name() << " " << line_right_left.front()->get_train_name() << std::endl;
-        }
-    }
-    
-}
-
 void Line::sort_trains()
 {
     double key;
@@ -304,10 +286,10 @@ void Line::sort_trains()
 
     for(int i = 0; i < trains.size(); i++)
     {
-        key = trains.at(i)->get_expected_time(0);
+        key = trains.at(i)->get_expected_time(0) + trains.at(i)->get_late();
         j = i - 1;
 
-        while( j >= 0 && trains.at(j)->get_expected_time(0) > key )
+        while( j >= 0 && trains.at(j)->get_expected_time(0) + trains.at(j)->get_late() > key )
         {
             swap(trains.at(j+1),trains.at(j));
             j = j - 1;
@@ -319,169 +301,82 @@ void Line::print_departure()
 {
     for(int i=0; i<trains.size(); i++)
     {
-        std::cout << "Train "<<trains.at(i)->get_train_name()<<" departure at : "<<trains.at(i)->get_expected_time(0)<<std::endl;
+        std::cout << "Train "<<trains.at(i)->get_train_name()<<" departure at : "<<trains.at(i)->get_expected_time(0) + trains.at(i)->get_late()<<std::endl;
     }
+}
+
+void Line::departure_next_train(int index)
+{
+    int dir;
+    while(trains.front()->get_expected_time(0) + trains.front()->get_late() == index)
+    {
+        if(trains.front()->get_direction() == 0)
+        {
+            line_left_right.push_back(std::move(trains.front()));
+            std::cout<<"departed train "<<line_left_right.back()->get_train_name()<< " in late of "<<line_left_right.back()->get_late()<<std::endl;
+            line_left_right.back()->set_velocity(1.3);
+            trains.erase(trains.begin());
+            dir = line_left_right.back()->get_direction();
+        }
+        else
+        {
+            line_right_left.push_back(std::move(trains.front()));
+            std::cout<<"departed train "<<line_right_left.back()->get_train_name() << " in late of "<<line_right_left.back()->get_late()<<std::endl;
+            line_right_left.back()->set_velocity(1.3);
+            trains.erase(trains.begin());
+            dir = line_right_left.back()->get_direction();
+        }
+        if(trains.empty())
+            break;
+        if(trains.front()->get_direction() == dir)
+        {
+            trains.front()->set_late(trains.front()->get_late() + 1);
+            break;
+        }
+    }
+}
+
+double Line::cmp_distance(const std::unique_ptr<Train> &a)
+{
+    if(a->get_direction() == 0)
+    {
+        if(!line_left_right.empty())
+            return line_left_right.back()->get_distance() - a->get_distance();
+    }
+    else if(!line_right_left.empty())
+        return line_right_left.back()->get_distance() - a->get_distance();
+
+    return -1;
+}
+
+bool Line::can_start()
+{
+    double cmp = cmp_distance(trains.front());
+    if(cmp < 10 && cmp > -1)
+        return false;
+
+    return true;
 }
 
 void Line::sim()
 {
-    for(int i=0; i<1439; i++)
+    for(int i=0; i<30; i++)
     {
-        departure_next_train(i);
-    }
-}
-
-/*
-void Line::vector_trains()
-{
-    // fancy stuff :)
-    std::cout << std::endl;
-    std::cout << "**********************" << std::endl;
-    std::cout << "**   TRAINS INPUT   **" << std::endl;
-    std::cout << "**********************" << std::endl;
-    std::cout << "|" << std::endl;
-    // --------------
-
-    // input stream
-    std::ifstream filett("timetables.txt");
-    std::string t;
-    while (!filett.eof())
-    {
-        std::getline(filett, t);
-
-        int train_number = stoi(t.substr(0, t.find(' ')));
-        int train_direction = stoi(t.substr(t.find(' ') + 1, 1));
-        int train_type = stoi(t.substr(t.find(' ') + 3, 1));
-
-        t = t.substr(t.find(' ') + 5);
-        std::vector<double> train_times;
-        train_times.push_back(stod(t.substr(0, t.find(' '))));
-        t = t.substr(t.find(' ') + 1);
-
-        // need to distinguish train velocity
-        double train_velocity_km_min;
-        switch (train_type)
-        {
-        case 1:
-            train_velocity_km_min = 160 / 60;
-            break;
-        case 2:
-            train_velocity_km_min = 240 / 60;
-            break;
-        case 3:
-            train_velocity_km_min = 300 / 60;
-            break;
-        }
-
-        int k = 0; // counter for removed stations
-        int x = 1;
-
-        // need a time for all stations
-        if (train_type == 1)
-        {
-            for (int i = 1; x < stations.size() && !t.empty(); i++)
-            {
-                if (k < time_to_remove.size())
-                {
-                    if (i == time_to_remove.at(k))
-                    {
-                        std::cout << "Removed time" << std::endl;
-                        t = t.substr(t.find(' ') + 1);
-                        k++;
-                        continue;
-                    }
-                }
-                double tmp = stod(t.substr(0, t.find(' ')));
-                double approx_time = train_times.back() + 5 + 7.5 + (stations.at(x)->get_distance() - stations.at(x - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
-                x++;
-
-                if (tmp < approx_time)
-                {
-                    std::cout << "Modified time for station" << x << "from" << tmp << " to " << approx_time << std::endl;
-                    tmp = approx_time;
-                }
-
-                train_times.push_back(tmp);
-                t = t.substr(t.find(' ') + 1);
-            }
-
-            // fill all remaining stations
-            for (int i = train_times.size(); i < stations.size(); i++)
-            {
-                double approx_time = train_times.back() + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min;
-                train_times.push_back(approx_time);
-                std::cout << "Missing time , insert : " << approx_time << std::endl;
-            }
-        }
-
-        // need a time for main stations only
-        if (train_type == 2 || train_type == 3)
-        {
-            std::vector<int> main_indexes;
-            for (int i = 0; i < stations.size(); i++)
-                if (!stations[i]->is_local())
-                    main_indexes.push_back(i);
-
-            int j = 1;
-            for (int i = 1; j < main_indexes.size() && !t.empty(); i++)
-            {
-                if (k < time_to_remove_main.size())
-                {
-                    if (i == time_to_remove_main.at(k))
-                    {
-                        std::cout << "Removed time" << std::endl;
-                        k++;
-                        t = t.substr(t.find(' ') + 1);
-                        continue;
-                    }
-                }
-                if (!stations.at(i)->is_local())
-                {
-                    double tmp = stod(t.substr(0, t.find(' ')));
-                    double approx_time = train_times.back() + 5 + 7.5 + (stations.at(main_indexes.at(j))->get_distance() - stations.at(main_indexes.at(j - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
-
-                    if (tmp < approx_time)
-                    {
-                        std::cout << "Modified time for station" << j << " from " << tmp << " to " << approx_time << std::endl;
-                        tmp = approx_time;
-                    }
-                    train_times.push_back(tmp);
-                    t = t.substr(t.find(' ') + 1);
-                    std::cout << "main station" << j << std::endl;
-                    j++;
-                }
-            }
-
-            // fill remaining main stations
-            for (int i = train_times.size(); i < main_indexes.size(); i++)
-            {
-                double approx_time = train_times.at(i - 1) + 5 + 7.5 + (stations.at(main_indexes.at(j))->get_distance() - stations.at(main_indexes.at(j - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
-                train_times.push_back(approx_time);
-                std::cout << "Missing time , insert : " << approx_time << std::endl;
-                j++;
-            }
-        }
-
-        if (train_type == 1)
-        {
-            std::unique_ptr<Train> tr{new Slow_Train(train_direction, train_number, train_times)};
-            trains.push_back(std::move(tr));
-            std::cout << "constructed Slow train: " << train_number << " - dir: " << train_direction << std::endl;
-        }
-        else if (train_type == 2)
-        {
-            std::unique_ptr<Train> tr{new Medium_Train(train_direction, train_number, train_times)};
-            trains.push_back(std::move(tr));
-            std::cout << "constructed Medium train: " << train_number << " - dir: " << train_direction << std::endl;
-        }
+        sort_trains();
+        if(trains.size() != 0 && can_start() )
+            departure_next_train(i);
         else
         {
-            std::unique_ptr<Train> tr{new Fast_Train(train_direction, train_number, train_times)};
-            trains.push_back(std::move(tr));
-            std::cout << "constructed Fast train: " << train_number << " - dir: " << train_direction << std::endl;
+            for(int j=0; j<trains.size(); j++)
+            {
+                std::cout<<trains.at(j)->get_direction()<<std::endl;
+                if(trains.at(j)->get_direction() == trains.front()->get_direction())
+                    trains.at(j)->set_late(trains.at(j)->get_late() + 1);
+            }
         }
+        sort_trains();
+        print_departure();
     }
-
-    filett.close();
+    std::cout<<"Train "<<trains.back()->get_train_name() << " not departed with a late of "<<trains.back()->get_late();
 }
-*/
+

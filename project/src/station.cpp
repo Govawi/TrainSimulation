@@ -1,4 +1,4 @@
-#include "../include/station.hpp"
+#include "station.hpp"
 
 Station::Station(std::string n, double d, bool type)
     : local{type}

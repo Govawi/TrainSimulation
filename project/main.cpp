@@ -1,5 +1,4 @@
-#include "src/line.cpp"
-#include "include/line.hpp"
+#include "line.hpp"
 #include <iostream>
 #include <vector>
 
