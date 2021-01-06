@@ -1,5 +1,5 @@
 #include "src/line.cpp"
-#include "src/simulation.cpp"
+#include "include/line.hpp"
 #include <iostream>
 #include <vector>
 
@@ -7,7 +7,8 @@ using namespace std;
 
 int main()
 {
-    //Line test;
-    Simulation sim;
+    Line test;
+    test.sim();
+    //Simulation sim;
     return 0;
 }

@@ -6,8 +6,8 @@ Station::Station(std::string n, double d, bool type)
     name = n;
     distance = d;
 
-    Deposit dep_right();
-    Deposit dep_left();
+    Deposit dep_right;
+    Deposit dep_left;
 }
 
 void Station::print() const

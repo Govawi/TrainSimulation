@@ -48,9 +48,10 @@ public:
      * @brief Sort in order of departure the train
      * 
      */
-    void push_train();
+    void departure_next_train(int index);
     void sort_trains();
     void print_departure();
+    void sim();
 };
 
 #endif

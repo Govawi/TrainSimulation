@@ -5,6 +5,7 @@
 #include <cmath>
 #include <sstream>
 #include <algorithm>
+#include <utility>
 
 Line::Line()
 {
@@ -278,13 +279,22 @@ void Line::print_trains() const
         trains.at(i)->print();
 }
 
-void Line::push_train()
+void Line::departure_next_train(int index)
 {
-    if(trains.front()->get_direction() == 0)
-        line_left_right.push_back(trains.front());
-    else
-        line_right_left.push_back(trains.front());
-    trains.erase(trains.begin());
+    while(trains.front()->get_expected_time(0) == index)
+    {
+        if(trains.front()->get_direction() == 0)
+        {
+            line_left_right.push_back(std::move(trains.front()));
+            std::cout << trains.front()->get_train_name() << " " << line_left_right.front()->get_train_name() << std::endl;
+        }
+        else
+        {
+            line_right_left.push_back(std::move(trains.front()));
+            std::cout << trains.front()->get_train_name() << " " << line_right_left.front()->get_train_name() << std::endl;
+        }
+    }
+    
 }
 
 void Line::sort_trains()
@@ -310,6 +320,14 @@ void Line::print_departure()
     for(int i=0; i<trains.size(); i++)
     {
         std::cout << "Train "<<trains.at(i)->get_train_name()<<" departure at : "<<trains.at(i)->get_expected_time(0)<<std::endl;
+    }
+}
+
+void Line::sim()
+{
+    for(int i=0; i<1439; i++)
+    {
+        departure_next_train(i);
     }
 }
 
