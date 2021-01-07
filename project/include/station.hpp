@@ -20,6 +20,7 @@ protected:
 public:
     Station(std::string n, double d, bool type);
 
+    inline void set_distance(double dis) { distance = dis; }
     inline std::string get_name() const { return name; }
     inline double get_distance() const { return distance; }
     inline bool is_local() const { return local; }

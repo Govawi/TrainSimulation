@@ -21,9 +21,6 @@ Line::Line()
     std::cout << std::endl;
     print_stations();
     print_trains();
-    print_departure();
-    sort_trains();
-    print_departure();
 }
 
 void Line::vector_trains()
@@ -192,19 +189,19 @@ void Line::vector_trains()
 
         if (train_type == 1)
         {
-            std::unique_ptr<Train> tr{new Slow_Train(train_direction, train_number, not_approx_times)};
+            std::shared_ptr<Train> tr{new Slow_Train(train_direction, train_number, not_approx_times)};
             trains.push_back(std::move(tr));
             std::cout << "constructed Slow train: " << train_number << " - dir: " << train_direction << std::endl;
         }
         else if (train_type == 2)
         {
-            std::unique_ptr<Train> tr{new Medium_Train(train_direction, train_number, not_approx_times)};
+            std::shared_ptr<Train> tr{new Medium_Train(train_direction, train_number, not_approx_times)};
             trains.push_back(std::move(tr));
             std::cout << "constructed Medium train: " << train_number << " - dir: " << train_direction << std::endl;
         }
         else
         {
-            std::unique_ptr<Train> tr{new Fast_Train(train_direction, train_number, not_approx_times)};
+            std::shared_ptr<Train> tr{new Fast_Train(train_direction, train_number, not_approx_times)};
             trains.push_back(std::move(tr));
             std::cout << "constructed Fast train: " << train_number << " - dir: " << train_direction << std::endl;
         }
@@ -226,7 +223,7 @@ void Line::vector_stations()
     int remove = 1;
 
     std::getline(fileld, s);
-    std::unique_ptr<Station> foo{new Main_Station(s, 0)};
+    std::shared_ptr<Station> foo{new Main_Station(s, 0)};
     stations.push_back(std::move(foo));
     double distance_old = 0.0;
 
@@ -252,13 +249,13 @@ void Line::vector_stations()
         if (station_type == 0)
         {
 
-            std::unique_ptr<Station> foo{new Main_Station(station_name, station_distance)};
+            std::shared_ptr<Station> foo{new Main_Station(station_name, station_distance)};
             stations.push_back(std::move(foo));
             remove++;
         }
         else if (station_type == 1)
         {
-            std::unique_ptr<Station> foo{new Local_Station(station_name, station_distance)};
+            std::shared_ptr<Station> foo{new Local_Station(station_name, station_distance)};
             stations.push_back(std::move(foo));
             remove++;
         }
@@ -297,41 +294,23 @@ void Line::sort_trains()
     }
 }
 
-void Line::print_departure()
-{
-    for (int i = 0; i < trains.size(); i++)
-    {
-        std::cout << "Train " << trains.at(i)->get_train_name() << " departure at : " << trains.at(i)->get_expected_time(0) + trains.at(i)->get_late() << std::endl;
-    }
-}
-
 void Line::departure_next_train(int index)
 {
-    while (trains.front()->get_expected_time(0) + trains.front()->get_late() == index)
+    while (line.front()->get_expected_time(0) + line.front()->get_late() == index)
     {
-        if (!trains.empty())
+        if (!line.empty())
         {
-            if (cmp_distance_start(trains.front()) > 10)
+            if (cmp_distance_start(line.front()) > 10)
             {
-                if (trains.front()->get_direction() == 0)
-                {
-                    line_left_right.push_back(std::move(trains.front()));
-                    std::cout << "departed train " << line_left_right.back()->get_train_name() << " in late of " << line_left_right.back()->get_late() << std::endl;
-                    line_left_right.back()->set_velocity(1.3);
-                    trains.erase(trains.begin());
-                }
-                else
-                {
-                    line_right_left.push_back(std::move(trains.front()));
-                    std::cout << "departed train " << line_right_left.back()->get_train_name() << " in late of " << line_right_left.back()->get_late() << std::endl;
-                    line_right_left.back()->set_velocity(1.3);
-                    trains.erase(trains.begin());
-                }
+                trains.push_back(std::move(line.front()));
+                std::cout << "departed train " << trains.back()->get_train_name() << " in late of " << trains.back()->get_late() << std::endl;
+                trains.back()->set_velocity(1.3);
+                line.erase(line.begin());
             }
             else
             {
-                trains.front()->set_late(trains.front()->get_late() + 1);
-                std::swap(trains.front(), trains.back());
+                line.front()->set_late(line.front()->get_late() + 1);
+                std::swap(line.front(), line.back());
                 sort_trains();
             }
         }
@@ -340,15 +319,15 @@ void Line::departure_next_train(int index)
     }
 }
 
-double Line::cmp_distance_start(const std::unique_ptr<Train> &a)
+double Line::cmp_distance_start(const std::shared_ptr<Train> &a)
 {
     if (a->get_direction() == 0)
     {
-        if (!line_left_right.empty())
-            return line_left_right.back()->get_distance() - a->get_distance();
+        if (!trains.empty())
+            return trains.back()->get_distance() - a->get_distance();
     }
-    else if (!line_right_left.empty())
-        return line_right_left.back()->get_distance() - a->get_distance();
+    else if (!trains.empty())
+        return trains.back()->get_distance() - a->get_distance();
 
     return 11;
 }
@@ -356,59 +335,92 @@ double Line::cmp_distance_start(const std::unique_ptr<Train> &a)
 void Line::update_velocity()
 {
     // controlla posizione rispetto a prossimo treno e prossima stazione
-    for (int i = 0; i < line_left_right.size(); i++)
+    for (int i = 0; i < trains.size(); i++)
     {
-        if (line_left_right.at(i)->get_distance() - stations.at(line_left_right.at(i)->get_stations_done())->get_distance() >= 5) // se maggiore 5 accelera a v max
-            line_left_right.at(i)->set_velocity(line_left_right.at(i)->get_velocity_max());
+        if (trains.at(i)->get_distance() - stations.at(trains.at(i)->get_stations_done())->get_distance() >= 5) // se maggiore 5 accelera a v max
+            trains.at(i)->set_velocity(trains.at(i)->get_velocity_max());
 
-        if (line_left_right.at(i - 1)->get_velocity_curr() != 0 && i != 0)
-            if (line_left_right.at(i - 1)->get_distance() - line_left_right.at(i)->get_distance() <= 10) // se minore 10 abbassi velocita'
-                line_left_right.at(i)->set_velocity(line_left_right.at(i - 1)->get_velocity_curr());
+        if (trains.at(i - 1)->get_velocity_curr() != 0 && i != 0)
+            if (trains.at(i - 1)->get_distance() - trains.at(i)->get_distance() <= 10) // se minore 10 abbassi velocita'
+                trains.at(i)->set_velocity(trains.at(i - 1)->get_velocity_curr());
 
-        if (stations.at(line_left_right.at(i)->get_stations_done()+1)->get_distance() - line_left_right.at(i)->get_distance() <= 5) // se minore 5 abbassi velocita'
-            line_left_right.at(i)->set_velocity(1.3);                                                                             // 1.3 = 80/60
+        if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 5) // se minore 5 abbassi velocita'
+            trains.at(i)->set_velocity(1.3);                                                                        // 1.3 = 80/60
     }
-
-    /*for (int i = 0; i < line_right_left.size(); i++)
-    {
-        if (line_right_left.at(i)->get_distance() -  >= 5) // se maggiore 5 accelera a v max
-            line_right_left.at(i)->set_velocity(line_right_left.at(i)->get_velocity_max());
-
-        if (line_right_left.at(i - 1)->get_velocity_curr() != 0 && i != 0)
-            if (line_right_left.at(i - 1)->get_distance() - line_right_left.at(i)->get_distance() <= 10) // se minore 10 abbassi velocita'
-                line_right_left.at(i)->set_velocity(line_right_left.at(i - 1)->get_velocity_curr());
-
-        if (stations.at(line_right_left.at(i)->get_stations_done())->get_distance() - line_right_left.at(i)->get_distance() <= 5) // se minore 5 abbassi velocita'
-            line_right_left.at(i)->set_velocity(1.3);                                                                             // 1.3 = 80/60
-    }*/
-    // adatta la velocita' di conseguenza
 }
 
 void Line::update_position()
 {
-    if (true == true)                                                                                                                        //can update
-        line_left_right.at(true)->set_distance(line_left_right.at(true)->get_distance() + line_left_right.at(true)->get_velocity_curr()); //update position
+    if (true == true)                                                                                          //can update
+        trains.at(true)->set_distance(trains.at(true)->get_distance() + trains.at(true)->get_velocity_curr()); //update position
+}
+
+void Line::reverse_stations()
+{
+    //n     -> distance(n - (n - 0))
+    //n - 1 -> distance(n - (n - 1))
+    //n - 2 -> distance(n - (n - 2))
+
+    std::vector<double> dis;
+
+    for (int i = 0; i < stations.size(); i++)
+        dis.push_back(stations.at(stations.size() - 1)->get_distance() - stations.at(stations.size() - 1 - i)->get_distance());
+
+    reverse(stations.begin(),stations.end());
+
+    for (int i = 0; i < stations.size(); i++)
+        stations.at(i)->set_distance(dis.at(i));
+}
+
+void Line::divide_trains()
+{
+    while (!trains.empty())
+    {
+        if (trains.front()->get_direction() == 0)
+        {
+            line.push_back(std::move(trains.front()));
+            trains.erase(trains.begin());
+        }
+        else
+        {
+            tmp.push_back(std::move(trains.front()));
+            trains.erase(trains.begin());
+        }
+    }
 }
 
 void Line::sim()
 {
+    sort_trains();
+
+    divide_trains();
+
     for (int minute = 0; minute < 1440; minute++)
     {
-        // check if leaves
-        // for (trains) if (v == 0)
-        //   if (contatore treno i != 0) contatore--
-        //   if (contatore treno i == 0) treno i set_velocity(max)
-
         //update position and velocity train --
         update_velocity();
-        //update_velocity(line_left_right,stations)
-        //update_velocity(line_right_left,tations_girate)
         //------------------------
 
         //departure ---------------
         departure_next_train(minute);
         sort_trains();
-        print_departure();
+        //-------------------------
+    }
+
+    trains.clear(); // treni partiti
+    reverse_stations();
+    line.clear(); // treni in attesa di partire
+    line = tmp;
+
+    for (int minute = 0; minute < 1440; minute++)
+    {
+        //update position and velocity train --
+        update_velocity();
+        //------------------------
+
+        //departure ---------------
+        departure_next_train(minute);
+        sort_trains();
         //-------------------------
     }
 }
@@ -423,12 +435,12 @@ void Line::sim()
 //
 //    0 1 2 3 4 5 6 7 8 9
 //    1 2 3 4 5 6
-//    
+//
 //    stations : LR
 //    trains : LR
 //    sim() : trains, stations
-//    
+//
 //    stations : RL
 //    trains : RL
 //    sim() : trains, stations
-//    
+//

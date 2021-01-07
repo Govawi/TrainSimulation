@@ -10,15 +10,16 @@ class Line
 {
 private:
     /** @brief Vector containing all stations. */
-    std::vector<std::unique_ptr<Station>> stations;
+    std::vector<std::shared_ptr<Station>> stations;
     /** @brief Vector containing all trains. */
-    std::vector<std::unique_ptr<Train>> trains;
+    std::vector<std::shared_ptr<Train>> trains;
     /** @brief Vector contatining train in line from left to right */
-    std::vector<std::unique_ptr<Train>> line_left_right;
+    std::vector<std::shared_ptr<Train>> line;
     /** @brief Vector contatining train in line from right to left */
-    std::vector<std::unique_ptr<Train>> line_right_left;
+    std::vector<std::shared_ptr<Train>> tmp;
     /** @brief Vector containing indexes of removed stations. */
     std::vector<int> time_to_remove;
+    /** @brief Vector containing indexes of removed main stations. */
     std::vector<int> time_to_remove_main;
 
 public:
@@ -56,11 +57,12 @@ public:
 
     //departure
     void departure_next_train(int index);
-    double cmp_distance_start(const std::unique_ptr<Train> &a);
-    void print_departure();
+    double cmp_distance_start(const std::shared_ptr<Train> &a);
     
     //simulation
     void sim();
+    void reverse_stations();
+    void divide_trains();
 };
 
 #endif
