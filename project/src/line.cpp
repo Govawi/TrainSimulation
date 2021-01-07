@@ -101,14 +101,14 @@ void Line::vector_trains()
             }
 
             std::cout << "All times saved" << std::endl;
-            
-            if(train_direction == 0)
+
+            if (train_direction == 0)
             {
                 for (int i = 1; i < not_approx_times.size(); i++)
                 {
-                    double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                    double approx_time = not_approx_times.at(i - 1) + 5 + 7.5 + (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
                     std::cout << not_approx_times.at(i) << "  approx: " << approx_time << "velocity of train: " << train_velocity_km_min << std::endl;
-                    if(i == 1)
+                    if (i == 1)
                         approx_time = approx_time - 5;
                     if (not_approx_times.at(i) < approx_time)
                     {
@@ -121,9 +121,9 @@ void Line::vector_trains()
             {
                 for (int i = 1; i < not_approx_times.size(); i++)
                 {
-                    double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(not_approx_times.size() - i)->get_distance() - stations.at(not_approx_times.size() - i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                    double approx_time = not_approx_times.at(i - 1) + 5 + 7.5 + (stations.at(not_approx_times.size() - i)->get_distance() - stations.at(not_approx_times.size() - i - 1)->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
                     std::cout << not_approx_times.at(i) << "  approx: " << approx_time << "velocity of train: " << train_velocity_km_min << std::endl;
-                    if(i == 1)
+                    if (i == 1)
                         approx_time = approx_time - 5;
                     if (not_approx_times.at(i) < approx_time)
                     {
@@ -158,13 +158,13 @@ void Line::vector_trains()
 
             std::cout << "All times saved" << std::endl;
 
-            if(train_direction == 0)
+            if (train_direction == 0)
             {
                 for (int i = 1; i < not_approx_times.size(); i++)
                 {
-                    double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(main_indexes.at(i))->get_distance() - stations.at(main_indexes.at(i - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                    double approx_time = not_approx_times.at(i - 1) + 5 + 7.5 + (stations.at(main_indexes.at(i))->get_distance() - stations.at(main_indexes.at(i - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
                     std::cout << not_approx_times.at(i) << "  approx: " << approx_time << std::endl;
-                    if(i == 1)
+                    if (i == 1)
                         approx_time = approx_time - 5;
                     if (not_approx_times.at(i) < approx_time)
                     {
@@ -173,13 +173,13 @@ void Line::vector_trains()
                     }
                 }
             }
-            else 
+            else
             {
                 for (int i = 1; i < not_approx_times.size(); i++)
                 {
-                    double approx_time = not_approx_times.at(i-1) + 5 + 7.5 + (stations.at(main_indexes.at(not_approx_times.size() - i))->get_distance() - stations.at(main_indexes.at(not_approx_times.size() - i - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
+                    double approx_time = not_approx_times.at(i - 1) + 5 + 7.5 + (stations.at(main_indexes.at(not_approx_times.size() - i))->get_distance() - stations.at(main_indexes.at(not_approx_times.size() - i - 1))->get_distance() - 10) / train_velocity_km_min; // 7.5 = 10/80/60
                     std::cout << not_approx_times.at(i) << "  approx: " << approx_time << std::endl;
-                    if(i == 1)
+                    if (i == 1)
                         approx_time = approx_time - 5;
                     if (not_approx_times.at(i) < approx_time)
                     {
@@ -284,14 +284,14 @@ void Line::sort_trains()
     double key;
     int j;
 
-    for(int i = 0; i < trains.size(); i++)
+    for (int i = 0; i < trains.size(); i++)
     {
         key = trains.at(i)->get_expected_time(0) + trains.at(i)->get_late();
         j = i - 1;
 
-        while( j >= 0 && trains.at(j)->get_expected_time(0) + trains.at(j)->get_late() > key )
+        while (j >= 0 && trains.at(j)->get_expected_time(0) + trains.at(j)->get_late() > key)
         {
-            swap(trains.at(j+1),trains.at(j));
+            swap(trains.at(j + 1), trains.at(j));
             j = j - 1;
         }
     }
@@ -299,31 +299,31 @@ void Line::sort_trains()
 
 void Line::print_departure()
 {
-    for(int i=0; i<trains.size(); i++)
+    for (int i = 0; i < trains.size(); i++)
     {
-        std::cout << "Train "<<trains.at(i)->get_train_name()<<" departure at : "<<trains.at(i)->get_expected_time(0) + trains.at(i)->get_late()<<std::endl;
+        std::cout << "Train " << trains.at(i)->get_train_name() << " departure at : " << trains.at(i)->get_expected_time(0) + trains.at(i)->get_late() << std::endl;
     }
 }
 
 void Line::departure_next_train(int index)
 {
-    while(trains.front()->get_expected_time(0) + trains.front()->get_late() == index)
+    while (trains.front()->get_expected_time(0) + trains.front()->get_late() == index)
     {
-        if(!trains.empty())
+        if (!trains.empty())
         {
-            if(cmp_distance(trains.front()) > 10)
+            if (cmp_distance(trains.front()) > 10)
             {
-                if(trains.front()->get_direction() == 0)
+                if (trains.front()->get_direction() == 0)
                 {
                     line_left_right.push_back(std::move(trains.front()));
-                    std::cout<<"departed train "<<line_left_right.back()->get_train_name()<< " in late of "<<line_left_right.back()->get_late()<<std::endl;
+                    std::cout << "departed train " << line_left_right.back()->get_train_name() << " in late of " << line_left_right.back()->get_late() << std::endl;
                     line_left_right.back()->set_velocity(1.3);
                     trains.erase(trains.begin());
                 }
                 else
                 {
                     line_right_left.push_back(std::move(trains.front()));
-                    std::cout<<"departed train "<<line_right_left.back()->get_train_name() << " in late of "<<line_right_left.back()->get_late()<<std::endl;
+                    std::cout << "departed train " << line_right_left.back()->get_train_name() << " in late of " << line_right_left.back()->get_late() << std::endl;
                     line_right_left.back()->set_velocity(1.3);
                     trains.erase(trains.begin());
                 }
@@ -331,7 +331,7 @@ void Line::departure_next_train(int index)
             else
             {
                 trains.front()->set_late(trains.front()->get_late() + 1);
-                std::swap(trains.front(),trains.back());
+                std::swap(trains.front(), trains.back());
                 sort_trains();
             }
         }
@@ -342,12 +342,12 @@ void Line::departure_next_train(int index)
 
 double Line::cmp_distance(const std::unique_ptr<Train> &a)
 {
-    if(a->get_direction() == 0)
+    if (a->get_direction() == 0)
     {
-        if(!line_left_right.empty())
+        if (!line_left_right.empty())
             return line_left_right.back()->get_distance() - a->get_distance();
     }
-    else if(!line_right_left.empty())
+    else if (!line_right_left.empty())
         return line_right_left.back()->get_distance() - a->get_distance();
 
     return 11;
@@ -355,13 +355,12 @@ double Line::cmp_distance(const std::unique_ptr<Train> &a)
 
 void Line::sim()
 {
-    for(int i=0; i<30; i++)
+    for (int i = 0; i < 30; i++)
     {
         //departure ---------------
         departure_next_train(i);
         sort_trains();
         print_departure();
         //-------------------------
-
     }
 }
