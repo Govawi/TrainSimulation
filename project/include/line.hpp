@@ -52,8 +52,6 @@ public:
 
     //update trains
     void update_position();
-    double next_train_distance();
-    double next_station_distance();
 
     //departure
     void departure_next_train(int index);

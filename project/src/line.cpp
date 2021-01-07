@@ -353,39 +353,56 @@ double Line::cmp_distance_start(const std::unique_ptr<Train> &a)
     return 11;
 }
 
-double next_train_distance()
-{}
-double next_station_distance()
-{}
-
 void Line::update_position()
 {
-    //controlla posizione rispetto a prossimo treno e prossima stazione
-    for(int i = 0; i < line_left_right.size(); i++)
+    // controlla posizione rispetto a prossimo treno e prossima stazione
+    for (int i = 0; i < line_left_right.size(); i++)
     {
-        next_train_distance();
-        next_station_distance();
-    }
-    for(int i = 0; i < line_right_left.size(); i++)
-    {
+        if (line_left_right.at(i - 1)->get_velocity_curr() != 0 && i != 0)
+            if (line_left_right.at(i - 1)->get_distance() - line_left_right.at(i)->get_distance() <= 10) // se minore 10 abbassi velocita'
+                line_left_right.at(i)->set_velocity(line_left_right.at(i - 1)->get_velocity_curr());
         
+        if (stations.at(line_left_right.at(i)->get_stations_done())->get_distance() - line_left_right.at(i)->get_distance() <= 5) // se minore 5 abbassi velocita'
+            line_left_right.at(i)->set_velocity(1.3); // 1.3 = 80/60
+        line_left_right.at(i)->set_distance(line_left_right.at(i)->get.distance() + ) //
+    }
+    for (int i = 0; i < line_right_left.size(); i++)
+    {
     }
 
-    //adatta la velocita' di conseguenza
+    // adatta la velocita' di conseguenza
 }
 
 void Line::sim()
 {
-    for (int i = 0; i < 30; i++)
+    for (int minute = 0; minute < 1440; minute++)
     {
         //update position and velocity train --
         update_position();
         //------------------------
 
         //departure ---------------
-        departure_next_train(i);
+        departure_next_train(minute);
         sort_trains();
         print_departure();
         //-------------------------
     }
 }
+
+//
+//    1. controllo fermate & stop
+//
+//    2. controllo rallentamenti pre stazione
+//
+//    3. controllo sorpassi
+//
+//
+//    0 1 2 3 4 5 6 7 8 9
+//    1 2 3 4 5 6
+//    
+//    
+//    
+//    
+//    
+//    
+//    

@@ -9,8 +9,8 @@ class Train
 {
 protected:
     const int train_number;
-    int velocity_curr;
-    const int velocity_max;
+    double velocity_curr;
+    const double velocity_max;
     double distance;
     const int direction;
     int late = 0;
@@ -18,13 +18,13 @@ protected:
     int stations_done = 0;
 
 public:
-    Train(int i, int d, int n, std::vector<double> t);
+    Train(double i, int d, int n, std::vector<double> t);
 
     inline int get_train_name() const { return train_number; }
-    inline int get_velocity_curr() const { return velocity_curr; }
-    inline int get_velocity_max() const { return velocity_max; }
+    inline double get_velocity_curr() const { return velocity_curr; }
+    inline double get_velocity_max() const { return velocity_max; }
     inline double get_distance() const { return distance; }
-    inline void set_velocity(int v) { velocity_curr = v; }
+    inline void set_velocity(double v) { velocity_curr = v; }
     inline void set_distance(double d) { distance = d; }
     inline int get_direction() const { return direction; }
     inline int get_late() const { return late; }
