@@ -311,7 +311,7 @@ void Line::departure_next_train(int index)
     {
         if (!trains.empty())
         {
-            if (cmp_distance(trains.front()) > 10)
+            if (cmp_distance_start(trains.front()) > 10)
             {
                 if (trains.front()->get_direction() == 0)
                 {
@@ -340,7 +340,7 @@ void Line::departure_next_train(int index)
     }
 }
 
-double Line::cmp_distance(const std::unique_ptr<Train> &a)
+double Line::cmp_distance_start(const std::unique_ptr<Train> &a)
 {
     if (a->get_direction() == 0)
     {

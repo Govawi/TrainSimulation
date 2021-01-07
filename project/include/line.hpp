@@ -49,7 +49,7 @@ public:
      * 
      */
     void departure_next_train(int index);
-    double cmp_distance(const std::unique_ptr<Train> &a);
+    double cmp_distance_start(const std::unique_ptr<Train> &a);
     void sort_trains();
     void print_departure();
     void sim();
