@@ -305,6 +305,7 @@ void Line::print_departure()
     }
 }
 
+/*
 void Line::departure_next_train(int index)
 {
     int dir;
@@ -335,6 +336,40 @@ void Line::departure_next_train(int index)
         }
     }
 }
+*/
+
+void Line::departure_next_train(int index)
+{
+    while(trains.front()->get_expected_time(0) + trains.front()->get_late() == index)
+    {
+        if(!trains.empty())
+        {
+            if(cmp_distance(trains.front()) < 10)
+            {
+                if(trains.front()->get_direction() == 0)
+                {
+                    line_left_right.push_back(std::move(trains.front()));
+                    std::cout<<"departed train "<<line_left_right.back()->get_train_name()<< " in late of "<<line_left_right.back()->get_late()<<std::endl;
+                    line_left_right.back()->set_velocity(1.3);
+                    trains.erase(trains.begin());
+                }
+                else
+                {
+                    line_right_left.push_back(std::move(trains.front()));
+                    std::cout<<"departed train "<<line_right_left.back()->get_train_name() << " in late of "<<line_right_left.back()->get_late()<<std::endl;
+                    line_right_left.back()->set_velocity(1.3);
+                    trains.erase(trains.begin());
+                }
+            }
+            else
+            {
+                trains.front()->set_late(trains.front()->get_late() + 1);
+            }
+        }
+        else
+            break;
+    }
+}
 
 double Line::cmp_distance(const std::unique_ptr<Train> &a)
 {
@@ -346,34 +381,14 @@ double Line::cmp_distance(const std::unique_ptr<Train> &a)
     else if(!line_right_left.empty())
         return line_right_left.back()->get_distance() - a->get_distance();
 
-    return -1;
-}
-
-bool Line::can_start()
-{
-    double cmp = cmp_distance(trains.front());
-    if(cmp < 10 && cmp > -1)
-        return false;
-
-    return true;
+    return 10;
 }
 
 void Line::sim()
 {
     for(int i=0; i<30; i++)
     {
-        sort_trains();
-        if(trains.size() != 0 && can_start() )
-            departure_next_train(i);
-        else
-        {
-            for(int j=0; j<trains.size(); j++)
-            {
-                std::cout<<trains.at(j)->get_direction()<<std::endl;
-                if(trains.at(j)->get_direction() == trains.front()->get_direction())
-                    trains.at(j)->set_late(trains.at(j)->get_late() + 1);
-            }
-        }
+        departure_next_train(i);
         sort_trains();
         print_departure();
     }
