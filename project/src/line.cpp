@@ -305,39 +305,6 @@ void Line::print_departure()
     }
 }
 
-/*
-void Line::departure_next_train(int index)
-{
-    int dir;
-    while(trains.front()->get_expected_time(0) + trains.front()->get_late() == index)
-    {
-        if(trains.front()->get_direction() == 0)
-        {
-            line_left_right.push_back(std::move(trains.front()));
-            std::cout<<"departed train "<<line_left_right.back()->get_train_name()<< " in late of "<<line_left_right.back()->get_late()<<std::endl;
-            line_left_right.back()->set_velocity(1.3);
-            trains.erase(trains.begin());
-            dir = line_left_right.back()->get_direction();
-        }
-        else
-        {
-            line_right_left.push_back(std::move(trains.front()));
-            std::cout<<"departed train "<<line_right_left.back()->get_train_name() << " in late of "<<line_right_left.back()->get_late()<<std::endl;
-            line_right_left.back()->set_velocity(1.3);
-            trains.erase(trains.begin());
-            dir = line_right_left.back()->get_direction();
-        }
-        if(trains.empty())
-            break;
-        if(trains.front()->get_direction() == dir)
-        {
-            trains.front()->set_late(trains.front()->get_late() + 1);
-            break;
-        }
-    }
-}
-*/
-
 void Line::departure_next_train(int index)
 {
     while(trains.front()->get_expected_time(0) + trains.front()->get_late() == index)
@@ -364,6 +331,8 @@ void Line::departure_next_train(int index)
             else
             {
                 trains.front()->set_late(trains.front()->get_late() + 1);
+                std::swap(trains.front(),trains.back());
+                sort_trains();
             }
         }
         else
@@ -381,7 +350,7 @@ double Line::cmp_distance(const std::unique_ptr<Train> &a)
     else if(!line_right_left.empty())
         return line_right_left.back()->get_distance() - a->get_distance();
 
-    return 10;
+    return 11;
 }
 
 void Line::sim()
