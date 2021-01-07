@@ -357,10 +357,12 @@ void Line::sim()
 {
     for(int i=0; i<30; i++)
     {
+        //departure ---------------
         departure_next_train(i);
         sort_trains();
         print_departure();
+        //-------------------------
+
     }
-    std::cout<<"Train "<<trains.back()->get_train_name() << " not departed with a late of "<<trains.back()->get_late();
 }
 
