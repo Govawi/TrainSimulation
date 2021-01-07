@@ -353,32 +353,56 @@ double Line::cmp_distance_start(const std::unique_ptr<Train> &a)
     return 11;
 }
 
-void Line::update_position()
+void Line::update_velocity()
 {
     // controlla posizione rispetto a prossimo treno e prossima stazione
     for (int i = 0; i < line_left_right.size(); i++)
     {
+        if (line_left_right.at(i)->get_distance() - stations.at(line_left_right.at(i)->get_stations_done())->get_distance() >= 5) // se maggiore 5 accelera a v max
+            line_left_right.at(i)->set_velocity(line_left_right.at(i)->get_velocity_max());
+
         if (line_left_right.at(i - 1)->get_velocity_curr() != 0 && i != 0)
             if (line_left_right.at(i - 1)->get_distance() - line_left_right.at(i)->get_distance() <= 10) // se minore 10 abbassi velocita'
                 line_left_right.at(i)->set_velocity(line_left_right.at(i - 1)->get_velocity_curr());
-        
-        if (stations.at(line_left_right.at(i)->get_stations_done())->get_distance() - line_left_right.at(i)->get_distance() <= 5) // se minore 5 abbassi velocita'
-            line_left_right.at(i)->set_velocity(1.3); // 1.3 = 80/60
-        line_left_right.at(i)->set_distance(line_left_right.at(i)->get.distance() + ) //
-    }
-    for (int i = 0; i < line_right_left.size(); i++)
-    {
+
+        if (stations.at(line_left_right.at(i)->get_stations_done()+1)->get_distance() - line_left_right.at(i)->get_distance() <= 5) // se minore 5 abbassi velocita'
+            line_left_right.at(i)->set_velocity(1.3);                                                                             // 1.3 = 80/60
     }
 
+    /*for (int i = 0; i < line_right_left.size(); i++)
+    {
+        if (line_right_left.at(i)->get_distance() -  >= 5) // se maggiore 5 accelera a v max
+            line_right_left.at(i)->set_velocity(line_right_left.at(i)->get_velocity_max());
+
+        if (line_right_left.at(i - 1)->get_velocity_curr() != 0 && i != 0)
+            if (line_right_left.at(i - 1)->get_distance() - line_right_left.at(i)->get_distance() <= 10) // se minore 10 abbassi velocita'
+                line_right_left.at(i)->set_velocity(line_right_left.at(i - 1)->get_velocity_curr());
+
+        if (stations.at(line_right_left.at(i)->get_stations_done())->get_distance() - line_right_left.at(i)->get_distance() <= 5) // se minore 5 abbassi velocita'
+            line_right_left.at(i)->set_velocity(1.3);                                                                             // 1.3 = 80/60
+    }*/
     // adatta la velocita' di conseguenza
+}
+
+void Line::update_position()
+{
+    if (true == true)                                                                                                                        //can update
+        line_left_right.at(true)->set_distance(line_left_right.at(true)->get_distance() + line_left_right.at(true)->get_velocity_curr()); //update position
 }
 
 void Line::sim()
 {
     for (int minute = 0; minute < 1440; minute++)
     {
+        // check if leaves
+        // for (trains) if (v == 0)
+        //   if (contatore treno i != 0) contatore--
+        //   if (contatore treno i == 0) treno i set_velocity(max)
+
         //update position and velocity train --
-        update_position();
+        update_velocity();
+        //update_velocity(line_left_right,stations)
+        //update_velocity(line_right_left,tations_girate)
         //------------------------
 
         //departure ---------------
@@ -400,9 +424,11 @@ void Line::sim()
 //    0 1 2 3 4 5 6 7 8 9
 //    1 2 3 4 5 6
 //    
+//    stations : LR
+//    trains : LR
+//    sim() : trains, stations
 //    
-//    
-//    
-//    
-//    
+//    stations : RL
+//    trains : RL
+//    sim() : trains, stations
 //    

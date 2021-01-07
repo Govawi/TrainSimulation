@@ -50,7 +50,8 @@ public:
      */
     void sort_trains();
 
-    //update trains
+    //update trains velocity
+    void update_velocity();
     void update_position();
 
     //departure
