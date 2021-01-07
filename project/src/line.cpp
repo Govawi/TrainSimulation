@@ -344,7 +344,7 @@ void Line::departure_next_train(int index)
     {
         if(!trains.empty())
         {
-            if(cmp_distance(trains.front()) < 10)
+            if(cmp_distance(trains.front()) > 10)
             {
                 if(trains.front()->get_direction() == 0)
                 {
