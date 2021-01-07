@@ -48,10 +48,19 @@ public:
      * @brief Sort in order of departure the train
      * 
      */
+    void sort_trains();
+
+    //update trains
+    void update_position();
+    double next_train_distance();
+    double next_station_distance();
+
+    //departure
     void departure_next_train(int index);
     double cmp_distance_start(const std::unique_ptr<Train> &a);
-    void sort_trains();
     void print_departure();
+    
+    //simulation
     void sim();
 };
 

@@ -353,10 +353,35 @@ double Line::cmp_distance_start(const std::unique_ptr<Train> &a)
     return 11;
 }
 
+double next_train_distance()
+{}
+double next_station_distance()
+{}
+
+void Line::update_position()
+{
+    //controlla posizione rispetto a prossimo treno e prossima stazione
+    for(int i = 0; i < line_left_right.size(); i++)
+    {
+        next_train_distance();
+        next_station_distance();
+    }
+    for(int i = 0; i < line_right_left.size(); i++)
+    {
+        
+    }
+
+    //adatta la velocita' di conseguenza
+}
+
 void Line::sim()
 {
     for (int i = 0; i < 30; i++)
     {
+        //update position and velocity train --
+        update_position();
+        //------------------------
+
         //departure ---------------
         departure_next_train(i);
         sort_trains();
