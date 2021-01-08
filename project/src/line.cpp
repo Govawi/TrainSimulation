@@ -362,6 +362,18 @@ void Line::update_position()
     {
         if (trains.at(i)->get_stop() == 0)                                                                //can update
             trains.at(i)->set_distance(trains.at(i)->get_distance() + trains.at(i)->get_velocity_curr()); //update position
+
+        if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 20) //se vicino a stazione
+        {
+            if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 160) //se locale e treno principale
+                continue;
+
+            if (stations.at(trains.at(i)->get_stations_done() + 1)->is_full())  //controlla se i binari di una principale sono pieni
+                trains.at(i)->set_deposit(true);                                
+        }
+
+        if(trains.at(i)->get_deposit() && stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 5)
+            
     }
 }
 
@@ -401,13 +413,12 @@ void Line::divide_trains()
 
 void Line::enqueue_next_train()
 {
-    //fare la gestione della stazione
-    //servono veramente i depositi ?
+    //stazione piena 20 km
+    //dovro andare nel deposito
 }
 
 void Line::dequeue_next_train()
 {
-
 }
 
 void Line::sim()

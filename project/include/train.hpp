@@ -19,6 +19,7 @@ protected:
 
     //contatore per stop alla stazione
     int stop = 0;
+    bool deposit = false;
 
 public:
     Train(double i, int d, int n, std::vector<double> t);
@@ -39,6 +40,8 @@ public:
     inline int get_stop() const { return stop; }
     inline void increase_stop() { stop++; }
     inline void decrease_stop() { (stop <= 1) ? stop = 0 : stop--; }
+    inline bool get_deposit() { return deposit; }
+    inline void set_deposit(bool b) { deposit = b; }
 };
 
 class Fast_Train : public Train

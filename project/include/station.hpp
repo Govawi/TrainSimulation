@@ -12,8 +12,7 @@ protected:
     std::string name;
     double distance;
     const bool local;
-    std::vector<Train> rail_left;
-    std::vector<Train> rail_right;
+    std::vector<std::shared_ptr<Train>> rail;
     Deposit dep_left;
     Deposit dep_right;
 
@@ -25,6 +24,12 @@ public:
     inline double get_distance() const { return distance; }
     inline bool is_local() const { return local; }
     void print() const;
+
+    //controllo se ho binari pieni
+    inline bool is_full() const { rail.size() == 2 ? true : false; }
+
+    //gestione binari
+    
 };
 
 class Main_Station : public Station
