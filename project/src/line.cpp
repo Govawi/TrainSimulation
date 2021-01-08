@@ -435,13 +435,13 @@ void Line::depart_station()
             {
                 if (trains.empty())
                 {
-                    std::cout<<"qui il probelma"<<std::endl;
+                    // std::cout<<"qui il probelma"<<std::endl;
                     stations.at(i)->get_front()->set_velocity(1.3);
-                    std::cout<<"no invece qui "<<std::endl;
+                    // std::cout<<"no invece qui "<<std::endl;
                     trains.push_back(stations.at(i)->get_front());
-                    std::cout<<"o forse qui"<<std::endl;
+                    // std::cout<<"o forse qui"<<std::endl;
                     stations.at(i)->remove_train();
-                    std::cout<<"ultima chance"<<std::endl;
+                    // std::cout<<"ultima chance"<<std::endl;
                     return ;
                 }
                 
@@ -504,7 +504,7 @@ void Line::fancy_cout() const
     // trains
     std::cout << std::endl
               << "t: ";
-    for (int i = 0; i < trains.at(trains.size() - 1)->get_distance(); i++)
+    for (int i = 0; i < (trains.at(trains.size() - 1)->get_distance()) / 5; i++)
         std::cout << ' ';
     std::cout << '0';
     for (int i = 1; i < trains.size(); i++)
@@ -539,7 +539,7 @@ void Line::sim()
     sort_trains();
     divide_trains();
 
-    for (int minute = 0; minute < 1440; minute++)
+    for (int minute = 0; minute < 2880; minute++)
     {
         //update position and velocity train --
         update_velocity();
@@ -564,7 +564,7 @@ void Line::sim()
     line.clear(); // treni in attesa di partire
     line = tmp;
 
-    for (int minute = 0; minute < 1440; minute++)
+    for (int minute = 0; minute < 2880; minute++)
     {
         //update position and velocity train --
         update_velocity();
