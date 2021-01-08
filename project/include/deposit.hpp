@@ -4,16 +4,17 @@
 #include "train.hpp"
 #include <queue>
 #include <stdexcept>
+#include <memory>
 
 class Deposit
 {
 private:
     /** @brief Fast queue. */
-    std::queue<Train*> fast;
+    std::queue<std::shared_ptr<Train>> fast;
     /** @brief Medium queue. */
-    std::queue<Train*> medium;
+    std::queue<std::shared_ptr<Train>> medium;
     /** @brief Slow queue. */
-    std::queue<Train*> slow;
+    std::queue<std::shared_ptr<Train>> slow;
 
 public:
     /**
@@ -30,13 +31,13 @@ public:
      * 
      * @param t Train to deposit.
      */
-    void push(Train &t);
+    void push(std::shared_ptr<Train> p);
     /**
      * @brief Removes highest priority train from the deposit
      * 
      * @return Train* that leaves the deposit.
      */
-    Train *pop();
+    std::shared_ptr<Train> pop();
 };
 
 #endif

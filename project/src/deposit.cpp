@@ -6,21 +6,21 @@ bool Deposit::is_empty()
     return !fast.size() && !medium.size() && !slow.size();
 }
 
-void Deposit::push(Train &t)
+void Deposit::push(std::shared_ptr<Train> p)
 {
     // push train in correct queue
-    if (t.get_velocity_max() == 300)
-        fast.push(&t);
-    else if (t.get_velocity_max() == 240)
-        medium.push(&t);
+    if (p->get_velocity_max() == 300)
+        fast.push(p);
+    else if (p->get_velocity_max() == 240)
+        medium.push(p);
     else
-        slow.push(&t);
+        slow.push(p);
 
     // stop the train
-    t.set_velocity(0);
+    p->set_velocity(0);
 }
 
-Train *Deposit::pop()
+std::shared_ptr<Train> Deposit::pop()
 {
     // checks if deposit is mt
     if (is_empty())
@@ -29,22 +29,22 @@ Train *Deposit::pop()
     // 1. empty fast queue
     if (fast.size())
     {
-        fast.front()->set_velocity(80);
-        Train *ret = fast.front();
+        fast.front()->set_velocity(1.3);
+        std::shared_ptr<Train> ret = fast.front();
         fast.pop();
         return ret;
     }
     // 2. empty medium queue
     else if (medium.size())
     {
-        medium.front()->set_velocity(80);
-        Train *ret = medium.front();
+        medium.front()->set_velocity(1.3);
+        std::shared_ptr<Train> ret = medium.front();
         medium.pop();
         return ret;
     }
     // 3. empty slow queue
-    slow.front()->set_velocity(80);
-    Train *ret = slow.front();
+    slow.front()->set_velocity(1.3);
+    std::shared_ptr<Train> ret = slow.front();
     slow.pop();
     return ret;
 }

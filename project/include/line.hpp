@@ -56,8 +56,8 @@ public:
     void update_position();
 
     //stations
-    void enqueue_next_train();
-    void dequeue_next_train();
+    void depart_station();
+    void depart_deposit();
 
     //departure
     void departure_next_train(int index);
@@ -67,6 +67,9 @@ public:
     void sim();
     void reverse_stations();
     void divide_trains();
+
+    //graphics
+    void fancy_cout() const;
 };
 
 #endif

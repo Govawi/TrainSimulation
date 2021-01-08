@@ -5,9 +5,6 @@ Station::Station(std::string n, double d, bool type)
 {
     name = n;
     distance = d;
-
-    Deposit dep_right;
-    Deposit dep_left;
 }
 
 void Station::print() const
@@ -16,4 +13,11 @@ void Station::print() const
     std::cout << "local:    " << local << std::endl;
     std::cout << "distance: " << distance << "km" << std::endl;
     std::cout << std::endl;
+}
+
+void Station::swap_train()
+{
+    if(rail.size() == 2)
+        if(rail.at(0)->get_velocity_max() < rail.at(1)->get_velocity_max())
+            swap(rail.at(0), rail.at(1));
 }

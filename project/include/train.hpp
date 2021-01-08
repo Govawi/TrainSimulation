@@ -1,9 +1,8 @@
 #ifndef train_hpp
 #define train_hpp
 
-#include <string>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 class Train
 {
@@ -13,7 +12,7 @@ protected:
     const double velocity_max;
     double distance;
     const int direction;
-    int late = 0;
+    int delay = 0;
     std::vector<double> expected_times;
     int stations_done = 0;
 
@@ -31,14 +30,14 @@ public:
     inline void set_velocity(double v) { velocity_curr = v; }
     inline void set_distance(double d) { distance = d; }
     inline int get_direction() const { return direction; }
-    inline int get_late() const { return late; }
-    inline void set_late(int l) { late = l; }
+    inline int get_delay() const { return delay; }
+    inline void increase_delay(int l) { delay += l; }
     inline double get_expected_time(int index) const { return expected_times.at(index); }
     inline int get_stations_done() const { return stations_done; }
     void print() const;
 
     inline int get_stop() const { return stop; }
-    inline void increase_stop() { stop++; }
+    inline void set_stop(int s) { stop = s; }
     inline void decrease_stop() { (stop <= 1) ? stop = 0 : stop--; }
     inline bool get_deposit() { return deposit; }
     inline void set_deposit(bool b) { deposit = b; }

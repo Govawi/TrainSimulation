@@ -13,8 +13,7 @@ protected:
     double distance;
     const bool local;
     std::vector<std::shared_ptr<Train>> rail;
-    Deposit dep_left;
-    Deposit dep_right;
+    std::shared_ptr<Deposit> deposit;
 
 public:
     Station(std::string n, double d, bool type);
@@ -26,10 +25,18 @@ public:
     void print() const;
 
     //controllo se ho binari pieni
-    inline bool is_full() const { rail.size() == 2 ? true : false; }
+    inline bool is_full() const { if (rail.size() == 2) return true; return false; }
 
     //gestione binari
-    
+    inline void add_rail(const std::shared_ptr<Train> p) { rail.push_back(p); }
+    inline void remove_train() { rail.erase(rail.begin()); }
+    inline int get_size() { return rail.size(); }
+    inline std::shared_ptr<Train> get_front() { return rail.front(); }
+    inline std::shared_ptr<Train> get_back() { return rail.back(); }
+    void swap_train();
+
+    //deposit
+    inline std::shared_ptr<Deposit> get_deposit() { return deposit; }
 };
 
 class Main_Station : public Station
