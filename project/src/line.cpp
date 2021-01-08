@@ -399,6 +399,17 @@ void Line::divide_trains()
     }
 }
 
+void Line::enqueue_next_train()
+{
+    //fare la gestione della stazione
+    //servono veramente i depositi ?
+}
+
+void Line::dequeue_next_train()
+{
+
+}
+
 void Line::sim()
 {
     sort_trains();
@@ -411,6 +422,11 @@ void Line::sim()
         update_velocity();
         update_position();
         //------------------------
+
+        //stations --------------
+        enqueue_next_train();
+        dequeue_next_train();
+        //-----------------------
 
         //departure ---------------
         departure_next_train(minute);

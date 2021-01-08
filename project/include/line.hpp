@@ -55,6 +55,10 @@ public:
     void update_velocity();
     void update_position();
 
+    //stations
+    void enqueue_next_train();
+    void dequeue_next_train();
+
     //departure
     void departure_next_train(int index);
     double cmp_distance_start(const std::shared_ptr<Train> &a);
