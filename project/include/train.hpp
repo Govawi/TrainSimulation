@@ -17,6 +17,9 @@ protected:
     std::vector<double> expected_times;
     int stations_done = 0;
 
+    //contatore per stop alla stazione
+    int stop = 0;
+
 public:
     Train(double i, int d, int n, std::vector<double> t);
 
@@ -32,6 +35,10 @@ public:
     inline double get_expected_time(int index) const { return expected_times.at(index); }
     inline int get_stations_done() const { return stations_done; }
     void print() const;
+
+    inline int get_stop() const { return stop; }
+    inline void increase_stop() { stop++; }
+    inline void decrease_stop() { (stop <= 1) ? stop = 0 : stop--; }
 };
 
 class Fast_Train : public Train
