@@ -497,8 +497,15 @@ void Line::depart_station()
     }
 }
 
-void Line::depart_deposit()
+void Line::depart_deposit()  // deposit pop ???? m9 sembra sbagliato mi dovrai spiegare che cosa fa di preciso
 {
+    for (int i = 1; i < stations.size() ; i++)
+    {
+        if( stations.at(i)->get_deposit()->next() == 0 )
+        {
+            stations.at(i)->get_deposit()->pop();
+        }
+    }
 }
 
 //                                                           //

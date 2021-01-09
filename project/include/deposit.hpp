@@ -38,6 +38,7 @@ public:
      * @return Train* that leaves the deposit.
      */
     std::shared_ptr<Train> pop();
+    int next();
 };
 
 #endif

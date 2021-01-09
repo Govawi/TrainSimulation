@@ -48,3 +48,18 @@ std::shared_ptr<Train> Deposit::pop()
     slow.pop();
     return ret;
 }
+
+int Deposit::next()
+{
+    if (is_empty())
+        return 1;
+
+    // 1. check fast queue
+    if (fast.size())
+        return fast.front()->get_stop();
+    // 2. check medium queue
+    else if (medium.size())
+        return medium.front()->get_stop();
+    // 3. check slow queue
+    return slow.front()->get_stop();
+}
