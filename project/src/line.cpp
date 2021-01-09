@@ -360,15 +360,17 @@ void Line::update_position()
 {
     for (int i = 0; i < trains.size(); i++)
     {
-        if (trains.at(i)->get_stop() == 0)                                                                //can update
-            trains.at(i)->set_distance(trains.at(i)->get_distance() + trains.at(i)->get_velocity_curr()); //update position
+        if (trains.at(i)->get_stop() != 0)                                                                //can't update
+            continue;
+
+        trains.at(i)->set_distance(trains.at(i)->get_distance() + trains.at(i)->get_velocity_curr()); //update position
 
         if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 20) //se vicino a stazione
         {
             if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 160) //se locale e treno principale
-                continue;
+                std::cout;  //nothing happens
 
-            if (stations.at(trains.at(i)->get_stations_done() + 1)->is_full()) //controlla se i binari di una principale sono pieni
+            else if (stations.at(trains.at(i)->get_stations_done() + 1)->is_full()) //controlla se i binari di una principale sono pieni
                 trains.at(i)->set_deposit(true);
         }
 
@@ -382,10 +384,23 @@ void Line::update_position()
 
         if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 0)
         {
-            //entra nella stazione
-            trains.at(i)->set_stop(5);
-            stations.at(trains.at(i)->get_stations_done() + 1)->add_rail(trains.at(i));
-            trains.erase(trains.begin() + i);
+            std::cout<<"Sono vicino alla stazione "<<trains.at(i)->get_stations_done() + 1<<std::endl;
+            //transita e basta
+            if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 160)
+            {
+                trains.at(i)->increase_stations_done();
+                std::cout<<"Transito e basta"<<std::endl;
+            }
+            //entra nella stazione e si ferma
+            else
+            { 
+                std::cout<<"Mi fermo alla stazione"<<std::endl;
+                trains.at(i)->set_stop(5);
+                trains.at(i)->set_velocity(0);
+                trains.at(i)->increase_stations_done();
+                stations.at(trains.at(i)->get_stations_done())->add_rail(trains.at(i)); //errore caso finale
+                trains.erase(trains.begin() + i);
+            }
         }
     }
 }
@@ -433,18 +448,24 @@ void Line::depart_station()
         {
             if (stations.at(i)->get_front()->get_stop() == 0) //stop == 0
             {
-                if (trains.empty())
+                if(i == stations.size() - 1 && stations.at(i)->get_size() == 1)
                 {
-                    // std::cout<<"qui il probelma"<<std::endl;
-                    stations.at(i)->get_front()->set_velocity(1.3);
-                    // std::cout<<"no invece qui "<<std::endl;
-                    trains.push_back(stations.at(i)->get_front());
-                    // std::cout<<"o forse qui"<<std::endl;
+                    std::cout<<"Sono al capolinea e sono passati 5 minuti....addio addio amici addio"<<std::endl;
+                    stations.at(i)->get_front().reset();
                     stations.at(i)->remove_train();
-                    // std::cout<<"ultima chance"<<std::endl;
-                    return ;
                 }
-                
+                else if (trains.empty())
+                {
+                    //std::cout<<"qui il probelma"<<std::endl;
+                    stations.at(i)->get_front()->set_velocity(1.3);
+                    //std::cout<<"no invece qui "<<std::endl;
+                    trains.push_back(stations.at(i)->get_front());
+                    //std::cout<<"o forse qui"<<std::endl;
+                    stations.at(i)->remove_train();
+                    //std::cout<<"ultima chance"<<std::endl;
+                }
+                else
+                {
                     for (int j = 0; j < trains.size(); j++)
                     {
                         if (stations.at(i)->get_front()->get_distance() < trains.at(j)->get_distance())
@@ -458,18 +479,20 @@ void Line::depart_station()
                             }
                         }
                     }
-                
+                }
             }
-
-            if (stations.at(i)->get_back()->get_stop() == 0)
+            
+            if (stations.at(i)->get_size() != 0)
             {
-                stations.at(i)->get_back()->set_stop(1);
-                stations.at(i)->get_back()->increase_delay(1);
+                if (stations.at(i)->get_back()->get_stop() == 0)
+                {
+                    stations.at(i)->get_back()->set_stop(1);
+                    stations.at(i)->get_back()->increase_delay(1);
+                }
+                stations.at(i)->get_front()->decrease_stop();
+                if (stations.at(i)->get_size() == 2)
+                    stations.at(i)->get_back()->decrease_stop();
             }
-
-            stations.at(i)->get_front()->decrease_stop();
-            if (stations.at(i)->get_size() == 2)
-                stations.at(i)->get_back()->decrease_stop();
         }
     }
 }
@@ -539,7 +562,7 @@ void Line::sim()
     sort_trains();
     divide_trains();
 
-    for (int minute = 0; minute < 2880; minute++)
+    for (int minute = 0; minute < 300; minute++)
     {
         //update position and velocity train --
         update_velocity();
@@ -564,7 +587,7 @@ void Line::sim()
     line.clear(); // treni in attesa di partire
     line = tmp;
 
-    for (int minute = 0; minute < 2880; minute++)
+    for (int minute = 0; minute < 300; minute++)
     {
         //update position and velocity train --
         update_velocity();

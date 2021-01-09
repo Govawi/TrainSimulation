@@ -33,6 +33,7 @@ public:
     inline int get_delay() const { return delay; }
     inline void increase_delay(int l) { delay += l; }
     inline double get_expected_time(int index) const { return expected_times.at(index); }
+    inline void increase_stations_done() { stations_done++; }
     inline int get_stations_done() const { return stations_done; }
     void print() const;
 
