@@ -23,6 +23,14 @@ Line::Line()
     print_trains();
 }
 
+//                                                     //
+//  _                   _   _             _            //
+// (_)_ __  _ __  _   _| |_| |_ _ __ __ _(_)_ __  ___  //
+// | | '_ \| '_ \| | | | __| __| '__/ _` | | '_ \/ __| //
+// | | | | | |_) | |_| | |_| |_| | | (_| | | | | \__ \ //
+// |_|_| |_| .__/ \__,_|\__|\__|_|  \__,_|_|_| |_|___/ //
+//         |_|                                         //
+//                                                     //
 void Line::vector_trains()
 {
     // fancy stuff :)
@@ -208,6 +216,14 @@ void Line::vector_trains()
     }
 }
 
+//                                                              //
+//  _                   _       _        _   _                  //
+// (_)_ __  _ __  _   _| |_ ___| |_ __ _| |_(_) ___  _ __  ___  //
+// | | '_ \| '_ \| | | | __/ __| __/ _` | __| |/ _ \| '_ \/ __| //
+// | | | | | |_) | |_| | |_\__ \ || (_| | |_| | (_) | | | \__ \ //
+// |_|_| |_| .__/ \__,_|\__|___/\__\__,_|\__|_|\___/|_| |_|___/ //
+//         |_|                                                  //
+//                                                              //
 void Line::vector_stations()
 {
     // fancy stuff :)
@@ -360,7 +376,7 @@ void Line::update_position()
 {
     for (int i = 0; i < trains.size(); i++)
     {
-        if (trains.at(i)->get_stop() != 0)                                                                //can't update
+        if (trains.at(i)->get_stop() != 0) //can't update
             continue;
 
         trains.at(i)->set_distance(trains.at(i)->get_distance() + trains.at(i)->get_velocity_curr()); //update position
@@ -368,7 +384,7 @@ void Line::update_position()
         if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 20) //se vicino a stazione
         {
             if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 160) //se locale e treno principale
-                std::cout;  //nothing happens
+                std::cout;                                                                                                //nothing happens
 
             else if (stations.at(trains.at(i)->get_stations_done() + 1)->is_full()) //controlla se i binari di una principale sono pieni
                 trains.at(i)->set_deposit(true);
@@ -384,17 +400,17 @@ void Line::update_position()
 
         if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 0)
         {
-            std::cout<<"Sono vicino alla stazione "<<trains.at(i)->get_stations_done() + 1<<std::endl;
+            std::cout << "Sono vicino alla stazione " << trains.at(i)->get_stations_done() + 1 << std::endl;
             //transita e basta
             if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 160)
             {
                 trains.at(i)->increase_stations_done();
-                std::cout<<"Transito e basta"<<std::endl;
+                std::cout << "Transito e basta" << std::endl;
             }
             //entra nella stazione e si ferma
             else
-            { 
-                std::cout<<"Mi fermo alla stazione"<<std::endl;
+            {
+                std::cout << "Mi fermo alla stazione" << std::endl;
                 trains.at(i)->set_stop(5);
                 trains.at(i)->set_velocity(0);
                 trains.at(i)->increase_stations_done();
@@ -448,9 +464,9 @@ void Line::depart_station()
         {
             if (stations.at(i)->get_front()->get_stop() == 0) //stop == 0
             {
-                if(i == stations.size() - 1 && stations.at(i)->get_size() == 1)
+                if (i == stations.size() - 1 && stations.at(i)->get_size() == 1)
                 {
-                    std::cout<<"Sono al capolinea e sono passati 5 minuti....addio addio amici addio"<<std::endl;
+                    std::cout << "Sono al capolinea e sono passati 5 minuti....addio addio amici addio" << std::endl;
                     stations.at(i)->get_front().reset();
                     stations.at(i)->remove_train();
                 }
@@ -481,7 +497,7 @@ void Line::depart_station()
                     }
                 }
             }
-            
+
             if (stations.at(i)->get_size() != 0)
             {
                 if (stations.at(i)->get_back()->get_stop() == 0)
@@ -497,11 +513,11 @@ void Line::depart_station()
     }
 }
 
-void Line::depart_deposit()  // deposit pop ???? m9 sembra sbagliato mi dovrai spiegare che cosa fa di preciso
+void Line::depart_deposit() // deposit pop ???? m9 sembra sbagliato mi dovrai spiegare che cosa fa di preciso
 {
-    for (int i = 1; i < stations.size() ; i++)
+    for (int i = 1; i < stations.size(); i++)
     {
-        if( stations.at(i)->get_deposit()->next() == 0 )
+        if (stations.at(i)->get_deposit()->next() == 0)
         {
             stations.at(i)->get_deposit()->pop();
         }
@@ -518,8 +534,9 @@ void Line::depart_deposit()  // deposit pop ???? m9 sembra sbagliato mi dovrai s
 //                                                           //
 void Line::fancy_cout() const
 {
-    if (!trains.size())
-        return;
+    // s: 0--------1------------2------------3-----------------------------------------------------------4
+    // t:       3                  2                        1                                      0
+
     std::cout << std::endl;
 
     // stations
@@ -531,40 +548,57 @@ void Line::fancy_cout() const
         std::cout << i;
     }
 
+    std::cout << std::endl;
+
     // trains
-    std::cout << std::endl
-              << "t: ";
-    for (int i = 0; i < (trains.at(trains.size() - 1)->get_distance()) / 5; i++)
-        std::cout << ' ';
-    std::cout << '0';
-    for (int i = 1; i < trains.size(); i++)
+    std::cout << "t: ";
+    switch (trains.size())
     {
-        for (int j = 0; j < (trains.at(trains.size() - i - 1)->get_distance() - trains.at(trains.size() - i)->get_distance()) / 5; j++)
+    case 0:
+        std::cout << std::endl;
+        break;
+
+    case 1:
+        for (int i = 0; i < trains.at(0)->get_distance() / 5; i++)
             std::cout << ' ';
-        std::cout << i;
+        std::cout << '0';
+        break;
+
+    default:
+        // first train
+        for (int i = 0; i < (trains.at(trains.size() - 1)->get_distance()) / 5; i++)
+            std::cout << ' ';
+        std::cout << trains.size() - 1;
+
+        // other trains
+        for (int i = trains.size() - 2; i >= 0; i--)
+        {
+            for (int j = 0; j < (trains.at(i)->get_distance() - trains.at(i + 1)->get_distance()) / 5; j++)
+                std::cout << ' ';
+            std::cout << trains.size() - i;
+        }
+        break;
     }
 
     std::cout << std::endl;
 }
 
+//                                                   //
+//      _                 _       _   _              //
+//  ___(_)_ __ ___  _   _| | __ _| |_(_) ___  _ __   //
+// / __| | '_ ` _ \| | | | |/ _` | __| |/ _ \| '_ \  //
+// \__ \ | | | | | | |_| | | (_| | |_| | (_) | | | | //
+// |___/_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_| //
+//                                                   //
 void Line::sim()
 {
-    std::cout << "                   lllllll                                                    " << std::endl
-              << "                   l:::::l                                                    " << std::endl
-              << "                   l:::::l                                                    " << std::endl
-              << "                   l:::::l                                                    " << std::endl
-              << "    eeeeeeeeeeee    l::::l    ooooooooooo      ooooooooooo      ooooooooooo   " << std::endl
-              << "  ee::::::::::::ee  l::::l  oo:::::::::::oo  oo:::::::::::oo  oo:::::::::::oo " << std::endl
-              << " e::::::eeeee:::::eel::::l o:::::::::::::::oo:::::::::::::::oo:::::::::::::::o" << std::endl
-              << "e::::::e     e:::::el::::l o:::::ooooo:::::oo:::::ooooo:::::oo:::::ooooo:::::o" << std::endl
-              << "e:::::::eeeee::::::el::::l o::::o     o::::oo::::o     o::::oo::::o     o::::o" << std::endl
-              << "e:::::::::::::::::e l::::l o::::o     o::::oo::::o     o::::oo::::o     o::::o" << std::endl
-              << "e::::::eeeeeeeeeee  l::::l o::::o     o::::oo::::o     o::::oo::::o     o::::o" << std::endl
-              << "e:::::::e           l::::l o::::o     o::::oo::::o     o::::oo::::o     o::::o" << std::endl
-              << "e::::::::e         l::::::lo:::::ooooo:::::oo:::::ooooo:::::oo:::::ooooo:::::o" << std::endl
-              << " e::::::::eeeeeeee l::::::lo:::::::::::::::oo:::::::::::::::oo:::::::::::::::o" << std::endl
-              << "  ee:::::::::::::e l::::::l oo:::::::::::oo  oo:::::::::::oo  oo:::::::::::oo " << std::endl
-              << "    eeeeeeeeeeeeee llllllll   ooooooooooo      ooooooooooo      ooooooooooo   " << std::endl;
+    std::cout << std::endl
+              << "     _                 _       _   _                 " << std::endl
+              << " ___(_)_ __ ___  _   _| | __ _| |_(_) ___  _ __      " << std::endl
+              << "/ __| | '_ ` _ \\| | | | |/ _` | __| |/ _ \\| '_ \\  " << std::endl
+              << "\\__ \\ | | | | | | |_| | | (_| | |_| | (_) | | | |  " << std::endl
+              << "|___/_|_| |_| |_|\\__,_|_|\\__,_|\\__|_|\\___/|_| |_|" << std::endl
+              << std::endl;
 
     sort_trains();
     divide_trains();
