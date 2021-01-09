@@ -577,7 +577,6 @@ void Line::sim()
         departure_next_train(minute);
         sort_trains();
         //-------------------------
-
         fancy_cout();
     }
     std::cout << "prima simulazione ok" << std::endl;
