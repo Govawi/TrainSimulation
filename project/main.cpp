@@ -8,7 +8,6 @@ int main()
 {
     Line test;
     test.sim();
-    //Simulation sim;
     return 0;
 }
 /*

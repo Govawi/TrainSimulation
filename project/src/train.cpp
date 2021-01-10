@@ -11,7 +11,7 @@ Train::Train(double i, int d, int n, std::vector<double> t)
 void Train::print() const
 {
     std::cout << "number:    " << train_number << std::endl;
-    std::cout << "priority:  " << velocity_max << std::endl;
+    std::cout << "max velocity:  " << velocity_max << std::endl;
     std::cout << "direction: " << direction << std::endl;
     for (int i = 0; i < expected_times.size(); i++)
         std::cout << " - station: " << i << " - time: " << expected_times.at(i) << std::endl;
