@@ -410,7 +410,7 @@ void Line::update_position()
             //entra nella stazione e si ferma
             else
             {
-                std::cout << "Mi fermo alla stazione" << std::endl;
+                std::cout << "Arrived in station "<< stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << " in late of " << trains.at(i)->get_delay() << std::endl;
                 trains.at(i)->set_stop(5);
                 trains.at(i)->set_velocity(0);
                 trains.at(i)->increase_stations_done();
@@ -618,7 +618,7 @@ void Line::sim()
         departure_next_train(minute);
         sort_trains();
         //-------------------------
-        fancy_cout();
+        //fancy_cout();
     }
     std::cout << "prima simulazione ok" << std::endl;
 
@@ -639,7 +639,7 @@ void Line::sim()
         sort_trains();
         //-------------------------
 
-        fancy_cout();
+        //fancy_cout();
     }
     std::cout << "seconda simulazione ok" << std::endl;
 }
