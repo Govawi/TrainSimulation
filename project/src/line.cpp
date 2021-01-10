@@ -318,27 +318,22 @@ void Line::sort_trains()
 
 void Line::departure_next_train(int index)
 {
-    switch (line.size())
-    {
-    case 0:
-        break;
+    if (!line.size())
+        return;
 
-    default:
-        if (line.front()->get_expected_time(0) + line.front()->get_delay() == index)
+    if (line.front()->get_expected_time(0) + line.front()->get_delay() == index)
+    {
+        if (trains.empty() || trains.back()->get_distance() >= 10)
         {
-            if (trains.empty() || trains.back()->get_distance() >= 10)
-            {
-                trains.push_back(std::move(line.front()));
-                std::cout << "Train: " << trains.back()->get_train_name() << " - Departure: " << index << " - Delay: " << trains.back()->get_delay() << std::endl;
-                trains.back()->set_velocity(1.3);
-                line.erase(line.begin());
-            }
-            // delay update
-            if (!line.empty())
-                for (int i = 0; i < line.size() && line.at(i)->get_expected_time(0) + line.at(i)->get_delay() == index; i++)
-                    line.at(i)->increase_delay(1);
+            trains.push_back(std::move(line.front()));
+            std::cout << "Train: " << trains.back()->get_train_name() << " - Departure: " << index << " - Delay: " << trains.back()->get_delay() << std::endl;
+            trains.back()->set_velocity(1.3);
+            line.erase(line.begin());
         }
-        break;
+        // delay update
+        if (!line.empty())
+            for (int i = 0; i < line.size() && line.at(i)->get_expected_time(0) + line.at(i)->get_delay() == index; i++)
+                line.at(i)->increase_delay(1);
     }
 }
 
@@ -557,34 +552,31 @@ void Line::fancy_cout() const
             std::cout << '-';
         std::cout << i;
     }
-
     std::cout << std::endl;
 
     // trains
     std::cout << "t: ";
-    switch (trains.size())
+
+    // mt
+    if (!trains.size())
     {
-    case 0:
         std::cout << std::endl;
-        break;
-
-    default:
-        // first train
-        for (int i = 0; i < (trains.at(trains.size() - 1)->get_distance()) / 5; i++)
-            std::cout << ' ';
-        std::cout << trains.size() - 1;
-
-        // other trains
-        if (trains.size() != 1)
-            for (int i = trains.size() - 2; i >= 0; i--)
-            {
-                for (int j = 0; j < (trains.at(i)->get_distance() - trains.at(i + 1)->get_distance()) / 5; j++)
-                    std::cout << ' ';
-                std::cout << trains.size() - i;
-            }
-        break;
+        return;
     }
 
+    // first train
+    for (int i = 0; i < (trains.at(trains.size() - 1)->get_distance()) / 5; i++)
+        std::cout << ' ';
+    std::cout << trains.size() - 1;
+
+    // other trains
+    if (trains.size() != 1)
+        for (int i = trains.size() - 2; i >= 0; i--)
+        {
+            for (int j = 0; j < (trains.at(i)->get_distance() - trains.at(i + 1)->get_distance()) / 5; j++)
+                std::cout << ' ';
+            std::cout << trains.size() - i;
+        }
     std::cout << std::endl;
 }
 
