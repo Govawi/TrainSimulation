@@ -61,7 +61,6 @@ public:
 
     //departure
     void departure_next_train(int index);
-    double cmp_distance_start(const std::shared_ptr<Train> &a);
     
     //simulation
     void sim();

@@ -113,7 +113,7 @@ void Line::vector_trains()
                     if (not_approx_times.at(i) < approx_time)
                     {
                         std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
-                        not_approx_times.at(i) = approx_time;
+                        not_approx_times.at(i) = ceil(approx_time);
                     }
                 }
             }
@@ -127,7 +127,7 @@ void Line::vector_trains()
                     if (not_approx_times.at(i) < approx_time)
                     {
                         std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
-                        not_approx_times.at(i) = approx_time;
+                        not_approx_times.at(i) = ceil(approx_time);
                     }
                 }
             }
@@ -164,7 +164,7 @@ void Line::vector_trains()
                     if (not_approx_times.at(i) < approx_time)
                     {
                         std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
-                        not_approx_times.at(i) = approx_time;
+                        not_approx_times.at(i) = ceil(approx_time);
                     }
                 }
             }
@@ -178,7 +178,7 @@ void Line::vector_trains()
                     if (not_approx_times.at(i) < approx_time)
                     {
                         std::cout << "Modified time for station: " << i << " from " << not_approx_times.at(i) << " to " << approx_time << std::endl;
-                        not_approx_times.at(i) = approx_time;
+                        not_approx_times.at(i) = ceil(approx_time);
                     }
                 }
             }
@@ -272,13 +272,12 @@ void Line::vector_stations()
 
 void Line::print_stations() const
 {
-
-    std::cout << "   _____ _        _   _                  " << std::endl;
-    std::cout << "  / ____| |      | | (_)                 " << std::endl;
-    std::cout << " | (___ | |_ __ _| |_ _  ___  _ __  ___  " << std::endl;
-    std::cout << "  \\___ \\| __/ _` | __| |/ _ \\| '_ \\/ __| " << std::endl;
-    std::cout << "  ____) | || (_| | |_| | (_) | | | \\__ \\ " << std::endl;
-    std::cout << " |_____/ \\__\\__,_|\\__|_|\\___/|_| |_|___/ \n"
+    std::cout << std::endl
+              << "     _        _   _                     " << std::endl
+              << " ___| |_ __ _| |_(_) ___  _ __  ___     " << std::endl
+              << "/ __| __/ _` | __| |/ _ \\| '_ \\/ __|  " << std::endl
+              << "\\__ \\ || (_| | |_| | (_) | | | \\__ \\" << std::endl
+              << "|___/\\__\\__,_|\\__|_|\\___/|_| |_|___/" << std::endl
               << std::endl;
 
     for (int i = 0; i < stations.size(); i++)
@@ -287,13 +286,12 @@ void Line::print_stations() const
 
 void Line::print_trains() const
 {
-
-    std::cout << "  _______        _            " << std::endl;
-    std::cout << " |__   __|      (_)           " << std::endl;
-    std::cout << "    | |_ __ __ _ _ _ __  ___  " << std::endl;
-    std::cout << "    | | '__/ _` | | '_ \\/ __| " << std::endl;
-    std::cout << "    | | | | (_| | | | | \\__ \\ " << std::endl;
-    std::cout << "    |_|_|  \\__,_|_|_| |_|___/ \n"
+    std::cout << std::endl
+              << " _             _               " << std::endl
+              << "| |_ _ __ __ _(_)_ __  ___     " << std::endl
+              << "| __| '__/ _` | | '_ \\/ __|   " << std::endl
+              << "| |_| | | (_| | | | | \\__ \\  " << std::endl
+              << " \\__|_|  \\__,_|_|_| |_|___/  " << std::endl
               << std::endl;
 
     for (int i = 0; i < trains.size(); i++)
@@ -320,46 +318,28 @@ void Line::sort_trains()
 
 void Line::departure_next_train(int index)
 {
-    if (!line.empty())
+    switch (line.size())
     {
-        while (line.front()->get_expected_time(0) + line.front()->get_delay() == index)
+    case 0:
+        break;
+
+    default:
+        if (line.front()->get_expected_time(0) + line.front()->get_delay() == index)
         {
-            if (!line.empty())
+            if (trains.empty() || trains.back()->get_distance() >= 10)
             {
-                if (cmp_distance_start(line.front()) > 10)
-                {
-                    trains.push_back(std::move(line.front()));
-                    std::cout << "departed train " << trains.back()->get_train_name() << " in late of " << trains.back()->get_delay() << std::endl;
-                    trains.back()->set_velocity(1.3);
-                    line.erase(line.begin());
-                }
-                else
-                {
-                    line.front()->increase_delay(1);
-                    std::swap(line.front(), line.back());
-                    sort_trains();
-                }
+                trains.push_back(std::move(line.front()));
+                std::cout << "Train: " << trains.back()->get_train_name() << " - Departure: " << index << " - Delay: " << trains.back()->get_delay() << std::endl;
+                trains.back()->set_velocity(1.3);
+                line.erase(line.begin());
             }
-            else
-                break;
-
-            if (line.empty())
-                break;
+            // delay update
+            if (!line.empty())
+                for (int i = 0; i < line.size() && line.at(i)->get_expected_time(0) + line.at(i)->get_delay() == index; i++)
+                    line.at(i)->increase_delay(1);
         }
+        break;
     }
-}
-
-double Line::cmp_distance_start(const std::shared_ptr<Train> &a)
-{
-    if (a->get_direction() == 0)
-    {
-        if (!trains.empty())
-            return trains.back()->get_distance() - a->get_distance();
-    }
-    else if (!trains.empty())
-        return trains.back()->get_distance() - a->get_distance();
-
-    return 11;
 }
 
 void Line::update_velocity()
@@ -404,7 +384,7 @@ void Line::update_position()
             if (trains.at(i)->get_deposit() && stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 5)
             {
                 //deve entrare nel deposito
-                std::cout << "Entro nel deposito" << std::endl;
+                std::cout << "Train: " << trains.at(i)->get_train_name() << " Deposit" << std::endl;
                 stations.at(trains.at(i)->get_stations_done() + 1)->get_deposit()->push(trains.at(i));
                 trains.erase(trains.begin() + i);
                 continue;
@@ -412,17 +392,29 @@ void Line::update_position()
 
             if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 0)
             {
-                std::cout << "Sono vicino alla stazione " << trains.at(i)->get_stations_done() + 1 << std::endl;
+                std::cout << "Train: " << trains.at(i)->get_train_name();
                 //transita e basta
                 if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 160)
                 {
                     trains.at(i)->increase_stations_done();
-                    std::cout << "Transito e basta" << std::endl;
+                    std::cout << " - Transit in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << std::endl;
                 }
                 //entra nella stazione e si ferma
                 else
                 {
-                    std::cout << "Arrived in station " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << " in late of " << trains.at(i)->get_delay() << std::endl;
+                    std::cout << " - Stopping in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << " - Arrived: ";
+                    if (trains.at(i)->get_velocity_max() == 160)
+                        std::cout << trains.at(i)->get_expected_time(trains.at(i)->get_stations_done() + 1) + trains.at(i)->get_delay();
+                    else
+                    {
+                        int exp = 0;
+                        for (int j = 0; j < trains.at(i)->get_stations_done() + 1; j++)
+                            if (stations.at(j)->is_local())
+                                exp++;
+                        std::cout << trains.at(i)->get_expected_time(exp) + trains.at(i)->get_delay();
+                    }
+                    std::cout << " - Delay: " << trains.at(i)->get_delay() << std::endl;
+
                     trains.at(i)->set_stop(5);
                     trains.at(i)->set_velocity(0);
                     trains.at(i)->increase_stations_done();
@@ -479,19 +471,15 @@ void Line::depart_station()
             {
                 if (i == stations.size() - 1 && stations.at(i)->get_size() == 1)
                 {
-                    std::cout << "Sono al capolinea e sono passati 5 minuti....addio addio amici addio" << std::endl;
+                    std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " - Bye, Have a Great Time!" << std::endl;
                     stations.at(i)->get_front().reset();
                     stations.at(i)->remove_train();
                 }
                 else if (trains.empty())
                 {
-                    //std::cout<<"qui il probelma"<<std::endl;
                     stations.at(i)->get_front()->set_velocity(1.3);
-                    //std::cout<<"no invece qui "<<std::endl;
                     trains.push_back(stations.at(i)->get_front());
-                    //std::cout<<"o forse qui"<<std::endl;
                     stations.at(i)->remove_train();
-                    //std::cout<<"ultima chance"<<std::endl;
                 }
                 else
                 {
@@ -526,14 +514,23 @@ void Line::depart_station()
     }
 }
 
-void Line::depart_deposit() // deposit pop ???? m9 sembra sbagliato mi dovrai spiegare che cosa fa di preciso
+void Line::depart_deposit() 
 {
     for (int i = 1; i < stations.size(); i++)
     {
-        if (stations.at(i)->get_deposit()->next() == 0)
+        if (!stations.at(i)->is_full() && !stations.at(i)->get_deposit()->is_empty())
         {
-            stations.at(i)->get_deposit()->pop();
+            std::shared_ptr<Train> tr = stations.at(i)->get_deposit()->pop();
+            for (int j = 0; j < trains.size(); j++)
+            {
+                if (tr->get_distance() < trains.at(j)->get_distance())
+                {
+                    trains.insert(trains.begin() + j, tr);
+                    break;
+                }
+            }
         }
+        stations.at(i)->get_deposit()->add_delay();
     }
 }
 
@@ -571,12 +568,6 @@ void Line::fancy_cout() const
         std::cout << std::endl;
         break;
 
-    case 1:
-        for (int i = 0; i < trains.at(0)->get_distance() / 5; i++)
-            std::cout << ' ';
-        std::cout << '0';
-        break;
-
     default:
         // first train
         for (int i = 0; i < (trains.at(trains.size() - 1)->get_distance()) / 5; i++)
@@ -584,12 +575,13 @@ void Line::fancy_cout() const
         std::cout << trains.size() - 1;
 
         // other trains
-        for (int i = trains.size() - 2; i >= 0; i--)
-        {
-            for (int j = 0; j < (trains.at(i)->get_distance() - trains.at(i + 1)->get_distance()) / 5; j++)
-                std::cout << ' ';
-            std::cout << trains.size() - i;
-        }
+        if (trains.size() != 1)
+            for (int i = trains.size() - 2; i >= 0; i--)
+            {
+                for (int j = 0; j < (trains.at(i)->get_distance() - trains.at(i + 1)->get_distance()) / 5; j++)
+                    std::cout << ' ';
+                std::cout << trains.size() - i;
+            }
         break;
     }
 
@@ -616,7 +608,7 @@ void Line::sim()
     sort_trains();
     divide_trains();
 
-    for (int minute = 0; minute < 300; minute++)
+    for (int minute = 0; minute < 1440; minute++)
     {
         //update position and velocity train --
         update_velocity();
@@ -625,6 +617,7 @@ void Line::sim()
 
         //stations --------------
         depart_station();
+        depart_deposit();
         //-----------------------
 
         //departure ---------------
@@ -633,14 +626,15 @@ void Line::sim()
         //-------------------------
         //fancy_cout();
     }
-    std::cout << "prima simulazione ok\n" << std::endl;
+    std::cout << "prima simulazione ok\n"
+              << std::endl;
 
     trains.clear(); // treni partiti
     reverse_stations();
     line.clear(); // treni in attesa di partire
     line = tmp;
 
-    for (int minute = 0; minute < 300; minute++)
+    for (int minute = 0; minute < 1440; minute++)
     {
         //update position and velocity train --
         update_velocity();

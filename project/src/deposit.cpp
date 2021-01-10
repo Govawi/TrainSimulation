@@ -49,17 +49,10 @@ std::shared_ptr<Train> Deposit::pop()
     return ret;
 }
 
-int Deposit::next()
+void Deposit::add_delay()
 {
-    if (is_empty())
-        return 1;
-
-    // 1. check fast queue
-    if (fast.size())
-        return fast.front()->get_stop();
-    // 2. check medium queue
-    else if (medium.size())
-        return medium.front()->get_stop();
-    // 3. check slow queue
-    return slow.front()->get_stop();
+    for(int i = 0; i < fast.size(); i++)
+    for(int i = 0; i < medium.size(); i++)
+    for(int i = 0; i < slow.size(); i++)
+        return;
 }
