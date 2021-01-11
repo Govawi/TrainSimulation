@@ -609,7 +609,7 @@ void Line::sim()
 
         //stations --------------
         depart_station();
-        depart_deposit();
+        //depart_deposit();
         //-----------------------
 
         //departure ---------------

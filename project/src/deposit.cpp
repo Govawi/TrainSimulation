@@ -52,7 +52,15 @@ std::shared_ptr<Train> Deposit::pop()
 void Deposit::add_delay()
 {
     for(int i = 0; i < fast.size(); i++)
+    {
+
+    }
     for(int i = 0; i < medium.size(); i++)
+    {
+
+    }
     for(int i = 0; i < slow.size(); i++)
-        return;
+    {
+
+    }
 }
