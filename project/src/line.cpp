@@ -505,7 +505,7 @@ void Line::depart_station(int index)
             
         if (stations.at(i)->get_front()->get_stop() == 0) //stop == 0
         {
-            if (i == stations.size() - 1 && stations.at(i)->get_size() > 0)
+            if (i == stations.size() - 1 && stations.at(i)->get_size() != 0)
             {
                 std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " - Bye, Have a Great Time!" << std::endl;
                 stations.at(i)->get_front().reset();
@@ -529,38 +529,36 @@ void Line::depart_station(int index)
                 //   ---------------------10km-------------------ST-------------------10km----------------->>>>
                 //                                t[5]           pk                                 t[4]
                 // insert at index == 0
-                if (stations.at(i)->get_front()->get_distance() > trains.front()->get_distance())
+                if (stations.at(i)->get_distance() > trains.front()->get_distance())
                 {
                     std::cout << "Train " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
                     stations.at(i)->get_front()->set_velocity(1.3);
                     trains.insert(trains.begin(), stations.at(i)->get_front());
                     stations.at(i)->remove_train();
                 }
+                else if(stations.at(i)->get_distance() < trains.back()->get_distance() && trains.back()->get_distance() - stations.at(i)->get_distance() >= 10 )
+                {
+                    std::cout << "Train " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
+                    stations.at(i)->get_front()->set_velocity(1.3);
+                    trains.insert(trains.end(), stations.at(i)->get_front());
+                    stations.at(i)->remove_train();
+                }
                 else
                 {
-                    for (int j = 0; j < trains.size(); j++)
-                    {
-                        // insert at index != 0
+                    for (int j = 0; j < trains.size()-1; j++)
+                    {            //                    3                 4
+                        // insert at index != 0        t    s            t                          station < treno  10 km distanza
                         /*if (stations.at(i)->get_distance() > trains.at(j)->get_distance() &&
                             trains.at(j)->get_distance() - stations.at(i)->get_distance() >= 10)*/
-                        if (stations.at(i)->get_distance() - trains.at(j)->get_distance() >= 10)
+                        //if (stations.at(i)->get_distance() - trains.at(j)->get_distance() >= 10 && trains.at(j+1)->get_distance() - stations.at(i)->get_distance() >= 10 )
+                        if (stations.at(i)->get_distance() > trains.at(j)->get_distance() && trains.at(j+1)->get_distance() - stations.at(i)->get_distance() >= 10)
                         {
                             std::cout << "Train " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
                             stations.at(i)->get_front()->set_velocity(1.3);
                             trains.insert(trains.begin() + j + 1, stations.at(i)->get_front());
                             stations.at(i)->remove_train();
                             break;
-                        }
-                        else
-                        {
-                            std::cout << "Train " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
-                            stations.at(i)->get_front()->set_velocity(1.3);
-                            trains.insert(trains.end(), stations.at(i)->get_front());
-                            stations.at(i)->remove_train();
-                            break;
-                            
-                        }
-                        
+                        } 
                     }
                 }
             }
