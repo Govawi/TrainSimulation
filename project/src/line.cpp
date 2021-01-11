@@ -569,27 +569,23 @@ void Line::fancy_cout() const
 
     // trains
     of << "t: ";
-
     // mt
-    if (!trains.size())
+    if (trains.size())
     {
-        of << std::endl;
-        return;
+        // first train
+        for (int i = 0; i < (trains.at(trains.size() - 1)->get_distance()) / 5; i++)
+            of << ' ';
+        of << trains.at(trains.size() - 1)->get_train_name();
+
+        // other trains
+        if (trains.size() > 1)
+            for (int i = trains.size() - 2; i >= 0; i--)
+            {
+                for (int j = 0; j < (trains.at(i)->get_distance() - trains.at(i + 1)->get_distance()) / 5; j++)
+                    of << ' ';
+                of << trains.at(i)->get_train_name();
+            }
     }
-
-    // first train
-    for (int i = 0; i < (trains.at(trains.size() - 1)->get_distance()) / 5; i++)
-        of << ' ';
-    of << trains.size() - 1;
-
-    // other trains
-    if (trains.size() != 1)
-        for (int i = trains.size() - 2; i >= 0; i--)
-        {
-            for (int j = 0; j < (trains.at(i)->get_distance() - trains.at(i + 1)->get_distance()) / 5; j++)
-                of << ' ';
-            of << trains.size() - i;
-        }
     of << std::endl;
 
     // parked
@@ -621,6 +617,9 @@ void Line::sim()
     sort_trains();
     divide_trains();
 
+    std::ofstream of("output.txt");
+    of << " ---------- SIMULATION ----------\n" << std::endl;
+    of.close();
     for (int minute = 0; minute < 1440; minute++)
     {
         //update position and velocity train --
