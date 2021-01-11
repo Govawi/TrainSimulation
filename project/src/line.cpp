@@ -60,7 +60,7 @@ void Line::vector_trains()
         switch (train_type)
         {
         case 1:
-            train_velocity_km_min = 2.67; // 160/60
+            train_velocity_km_min = 2.7; // 160/60
             break;
         case 2:
             train_velocity_km_min = 4; // 240/60
@@ -356,7 +356,7 @@ void Line::update_velocity()
     }
 }
 
-void Line::update_position()
+void Line::update_position(int index)
 {
     for (int i = 0; i < trains.size(); i++)
     {
@@ -377,6 +377,7 @@ void Line::update_position()
             {
                 //deve entrare nel deposito
                 std::cout << "Train: " << trains.at(i)->get_train_name() << " Deposit" << std::endl;
+                trains.at(i)->set_deposit(false);
                 stations.at(trains.at(i)->get_stations_done() + 1)->get_deposit()->push(trains.at(i));
                 trains.erase(trains.begin() + i);
                 continue;
@@ -389,22 +390,17 @@ void Line::update_position()
                 if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 2.7)
                 {
                     trains.at(i)->increase_stations_done();
-                    std::cout << " - Transit in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << std::endl;
+                    std::cout << " - Transit in " << stations.at(trains.at(i)->get_stations_done())->get_name() << std::endl;
                 }
                 //entra nella stazione e si ferma
                 else
                 {
                     std::cout << " - Stopping in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << " - Arrived: ";
                     if (trains.at(i)->get_velocity_max() == 2.7)
-                        std::cout << trains.at(i)->get_expected_time(trains.at(i)->get_stations_done() + 1) + trains.at(i)->get_delay();
+                        std::cout << index << std::endl;
                     else
-                    {
-                        int exp = 0;
-                        for (int j = 0; j < trains.at(i)->get_stations_done() + 1; j++)
-                            if (stations.at(j)->is_local())
-                                exp++;
-                        std::cout << trains.at(i)->get_expected_time(exp) + trains.at(i)->get_delay();
-                    }
+                        std::cout << index;
+
                     std::cout << " - Delay: " << trains.at(i)->get_delay() << std::endl;
 
                     trains.at(i)->set_stop(5);
@@ -452,56 +448,74 @@ void Line::divide_trains()
     }
 }
 
-void Line::depart_station()
+void Line::depart_station(int index)
 {
     for (int i = 1; i < stations.size(); i++)
     {
         stations.at(i)->swap_train();
-        if (stations.at(i)->get_size() != 0)
+        if (!stations.at(i)->get_size())
+            continue;
+            
+        if (!stations.at(i)->get_front()->get_stop()) //stop == 0
         {
-            if (stations.at(i)->get_front()->get_stop() == 0) //stop == 0
+            if (i == stations.size() - 1 && stations.at(i)->get_size() == 1)
             {
-                if (i == stations.size() - 1 && stations.at(i)->get_size() == 1)
+                std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " - Bye, Have a Great Time!" << std::endl;
+                stations.at(i)->get_front().reset();
+                stations.at(i)->remove_train();
+            }
+            else if (trains.empty())
+            {
+                std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
+                stations.at(i)->get_front()->set_velocity(1.3);
+                trains.push_back(stations.at(i)->get_front());
+                stations.at(i)->remove_train();
+            }
+            else
+            {
+                // dpt dst    7
+                // distan: 9 8 6 5 4 3 2        
+                // trains: 0 1 2 3 4 5 6
+                // trains: f           b
+                //   ---------------------10km-------------------ST-------------------10km----------------->>>>
+                //                                t[5]           pk                                 t[4]
+                // insert at index == 0
+                if (stations.at(i)->get_front()->get_distance() > trains.front()->get_distance())
                 {
-                    std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " - Bye, Have a Great Time!" << std::endl;
-                    stations.at(i)->get_front().reset();
-                    stations.at(i)->remove_train();
-                }
-                else if (trains.empty())
-                {
+                    std::cout << "Train " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
                     stations.at(i)->get_front()->set_velocity(1.3);
-                    trains.push_back(stations.at(i)->get_front());
+                    trains.insert(trains.begin(), stations.at(i)->get_front());
                     stations.at(i)->remove_train();
                 }
-                else
+                else for (int j = 1; j < trains.size(); j++)
                 {
-                    for (int j = 0; j < trains.size(); j++)
+                    // insert at index != 0
+                    if (stations.at(i)->get_front()->get_distance() > trains.at(j)->get_distance() &&
+                        trains.at(j - 1)->get_distance() - stations.at(i)->get_front()->get_distance() >= 10)
                     {
-                        if (stations.at(i)->get_front()->get_distance() < trains.at(j)->get_distance())
-                        {
-                            if (trains.at(j)->get_distance() - stations.at(i)->get_front()->get_distance() >= 10)
-                            {
-                                stations.at(i)->get_front()->set_velocity(1.3);
-                                trains.insert(trains.begin() + j, stations.at(i)->get_front());
-                                stations.at(i)->remove_train();
-                                break;
-                            }
-                        }
+                        std::cout << "Train " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
+                        stations.at(i)->get_front()->set_velocity(1.3);
+                        trains.insert(trains.begin() + j, stations.at(i)->get_front());
+                        stations.at(i)->remove_train();
+                        break;
                     }
                 }
             }
+        }
 
-            if (stations.at(i)->get_size() != 0)
-            {
-                if (stations.at(i)->get_back()->get_stop() == 0)
-                {
-                    stations.at(i)->get_back()->set_stop(1);
-                    stations.at(i)->get_back()->increase_delay(1);
-                }
-                stations.at(i)->get_front()->decrease_stop();
-                if (stations.at(i)->get_size() == 2)
-                    stations.at(i)->get_back()->decrease_stop();
-            }
+        switch (stations.at(i)->get_size())
+        {
+        case 1:
+            if (stations.at(i)->get_front()->get_stop() == 0)
+                stations.at(i)->get_back()->increase_delay(1);
+            stations.at(i)->get_front()->decrease_stop();
+            break;
+        case 2:
+            stations.at(i)->get_front()->decrease_stop();
+            stations.at(i)->get_back()->decrease_stop();
+            break;
+        default:
+            break;
         }
     }
 }
@@ -536,54 +550,64 @@ void Line::depart_deposit()
 //                                                           //
 void Line::fancy_cout() const
 {
+    std::ofstream of("output.txt", std::ios_base::app);
+
     // s: 0--------1------------2------------3-----------------------------------------------------------4
     // t:       3                  2                        1                                      0
 
-    std::cout << std::endl;
+    of << std::endl;
 
     // stations
-    std::cout << "s: " << '0';
+    of << "s: " << '0';
     for (int i = 1; i < stations.size(); i++)
     {
         for (int j = 0; j < (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance()) / 5; j++)
-            std::cout << '-';
-        std::cout << i;
+            of << '-';
+        of << i;
     }
-    std::cout << std::endl;
+    of << std::endl;
 
     // trains
-    std::cout << "t: ";
+    of << "t: ";
 
     // mt
     if (!trains.size())
     {
-        std::cout << std::endl;
+        of << std::endl;
         return;
     }
 
     // first train
     for (int i = 0; i < (trains.at(trains.size() - 1)->get_distance()) / 5; i++)
-        std::cout << ' ';
-    std::cout << trains.size() - 1;
+        of << ' ';
+    of << trains.size() - 1;
 
     // other trains
     if (trains.size() != 1)
         for (int i = trains.size() - 2; i >= 0; i--)
         {
             for (int j = 0; j < (trains.at(i)->get_distance() - trains.at(i + 1)->get_distance()) / 5; j++)
-                std::cout << ' ';
-            std::cout << trains.size() - i;
+                of << ' ';
+            of << trains.size() - i;
         }
-    std::cout << std::endl;
+    of << std::endl;
+
+    // parked
+    of << "p: " << ' ';
+    for (int i = 1; i < stations.size(); i++)
+    {
+        for (int j = 0; j < (stations.at(i)->get_distance() - stations.at(i - 1)->get_distance()) / 5; j++)
+            of << ' ';
+        if (!stations.at(i)->get_size())
+            of << ' ';
+        for (int j = 0; j < stations.at(i)->get_size(); j++)
+            of << 'p';
+    }
+    of << std::endl;
+
+    of.close();
 }
 
-//                                                   //
-//      _                 _       _   _              //
-//  ___(_)_ __ ___  _   _| | __ _| |_(_) ___  _ __   //
-// / __| | '_ ` _ \| | | | |/ _` | __| |/ _ \| '_ \  //
-// \__ \ | | | | | | |_| | | (_| | |_| | (_) | | | | //
-// |___/_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_| //
-//                                                   //
 void Line::sim()
 {
     std::cout << std::endl
@@ -601,11 +625,11 @@ void Line::sim()
     {
         //update position and velocity train --
         update_velocity();
-        update_position();
+        update_position(minute);
         //------------------------
 
         //stations --------------
-        depart_station();
+        depart_station(minute);
         depart_deposit();
         //-----------------------
 
@@ -613,7 +637,7 @@ void Line::sim()
         departure_next_train(minute);
         sort_trains();
         //-------------------------
-        //fancy_cout();
+        fancy_cout();
     }
     std::cout << "prima simulazione ok\n"
               << std::endl;
@@ -622,24 +646,25 @@ void Line::sim()
     reverse_stations();
     line.clear(); // treni in attesa di partire
     line = tmp;
-
+    /*
     for (int minute = 0; minute < 1440; minute++)
     {
         //update position and velocity train --
         update_velocity();
-        update_position();
+        update_position(minute);
         //------------------------
 
-        //departure ---------------
-        departure_next_train(minute);
-        sort_trains();
+        //stations ---------------
+        depart_station(minute);
+        depart_deposit();
         //-------------------------
 
         //departure ---------------
         departure_next_train(minute);
         sort_trains();
 
-        //fancy_cout();
+        fancy_cout();
     }
     std::cout << "seconda simulazione ok" << std::endl;
+    */
 }

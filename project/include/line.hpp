@@ -53,10 +53,10 @@ public:
 
     //update trains velocity
     void update_velocity();
-    void update_position();
+    void update_position(int index);
 
     //stations
-    void depart_station();
+    void depart_station(int index);
     void depart_deposit();
 
     //departure
