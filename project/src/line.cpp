@@ -364,10 +364,11 @@ void Line::update_position(int index)
 
         if (trains.at(i)->get_stations_done() != stations.size() - 1) //TEST PER PROBLEMI
         {
-            if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 20) //se vicino a stazione
+            if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 20 && 
+                stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() > 25) //se vicino a stazione
             {
                 if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 2.7) //se locale e treno principale
-                    std::cout;                                                                                                //nothing happens
+                    std::cout;                                                                                                //nothing happens 
 
                 else if (stations.at(trains.at(i)->get_stations_done() + 1)->is_full()) //controlla se i binari di una principale sono pieni
                     trains.at(i)->set_deposit(true);
