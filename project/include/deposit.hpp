@@ -2,28 +2,29 @@
 #define deposit_hpp
 
 #include "train.hpp"
-#include <queue>
+#include <vector>
 #include <stdexcept>
 #include <memory>
 
 class Deposit
 {
 private:
-    /** @brief Fast queue. */
-    std::queue<std::shared_ptr<Train>> fast;
+    /** @brief Fast queue. */ //is this some weird champ
+    std::vector<std::shared_ptr<Train>> fast;
     /** @brief Medium queue. */
-    std::queue<std::shared_ptr<Train>> medium;
+    std::vector<std::shared_ptr<Train>> medium;
     /** @brief Slow queue. */
-    std::queue<std::shared_ptr<Train>> slow;
+    std::vector<std::shared_ptr<Train>> slow;
 
 public:
     /**
      * @brief Construct a mt deposit, with priority.
      */
-    Deposit() : fast{}, medium{}, slow{} {}
+    Deposit() : fast(), medium(), slow() {}
 
     /**
-     * @brief Checks if deposit it mt.
+     * @brief 
+     * 
      */
     bool is_empty();
     /**

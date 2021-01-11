@@ -47,19 +47,19 @@ public:
 class Fast_Train : public Train
 {
 public:
-    Fast_Train(int d, int n, std::vector<double> t) : Train(300, d, n, t) {}
+    Fast_Train(int d, int n, std::vector<double> t) : Train(5, d, n, t) {}
 };
 
 class Medium_Train : public Train
 {
 public:
-    Medium_Train(int d, int n, std::vector<double> t) : Train(240, d, n, t) {}
+    Medium_Train(int d, int n, std::vector<double> t) : Train(4, d, n, t) {}
 };
 
 class Slow_Train : public Train
 {
 public:
-    Slow_Train(int d, int n, std::vector<double> t) : Train(160, d, n, t) {}
+    Slow_Train(int d, int n, std::vector<double> t) : Train(2.7, d, n, t) {}
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "../include/station.hpp"
 
 Station::Station(std::string n, double d, bool type)
-    : local{type}
+    : local{type},  deposit{new Deposit()}
 {
     name = n;
     distance = d;

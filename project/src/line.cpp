@@ -360,9 +360,6 @@ void Line::update_position()
 {
     for (int i = 0; i < trains.size(); i++)
     {
-        if (trains.at(i)->get_stop() != 0) //can't update
-            continue;
-
         trains.at(i)->set_distance(trains.at(i)->get_distance() + trains.at(i)->get_velocity_curr()); //update position
 
         if (trains.at(i)->get_stations_done() != stations.size() - 1) //TEST PER PROBLEMI
@@ -509,7 +506,7 @@ void Line::depart_station()
     }
 }
 
-void Line::depart_deposit() 
+void Line::depart_deposit()
 {
     for (int i = 1; i < stations.size(); i++)
     {
@@ -609,7 +606,7 @@ void Line::sim()
 
         //stations --------------
         depart_station();
-        //depart_deposit();
+        depart_deposit();
         //-----------------------
 
         //departure ---------------
@@ -637,6 +634,10 @@ void Line::sim()
         departure_next_train(minute);
         sort_trains();
         //-------------------------
+
+        //departure ---------------
+        departure_next_train(minute);
+        sort_trains();
 
         //fancy_cout();
     }

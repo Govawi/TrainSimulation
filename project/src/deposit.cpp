@@ -3,18 +3,18 @@
 bool Deposit::is_empty()
 {
     // checks size of every queue
-    return !fast.size() && !medium.size() && !slow.size();
+    return fast.empty() && medium.empty() && slow.empty();
 }
 
 void Deposit::push(std::shared_ptr<Train> p)
 {
     // push train in correct queue
-    if (p->get_velocity_max() == 300)
-        fast.push(p);
-    else if (p->get_velocity_max() == 240)
-        medium.push(p);
+    if (p->get_velocity_max() == 5)
+        fast.push_back(p);
+    else if (p->get_velocity_max() == 4)
+        medium.push_back(p);
     else
-        slow.push(p);
+        slow.push_back(p);
 
     // stop the train
     p->set_velocity(0);
@@ -31,7 +31,7 @@ std::shared_ptr<Train> Deposit::pop()
     {
         fast.front()->set_velocity(1.3);
         std::shared_ptr<Train> ret = fast.front();
-        fast.pop();
+        fast.erase(fast.begin());
         return ret;
     }
     // 2. empty medium queue
@@ -39,28 +39,24 @@ std::shared_ptr<Train> Deposit::pop()
     {
         medium.front()->set_velocity(1.3);
         std::shared_ptr<Train> ret = medium.front();
-        medium.pop();
+        medium.erase(medium.begin());
         return ret;
     }
     // 3. empty slow queue
     slow.front()->set_velocity(1.3);
     std::shared_ptr<Train> ret = slow.front();
-    slow.pop();
+    slow.erase(slow.begin());
     return ret;
 }
 
 void Deposit::add_delay()
 {
     for(int i = 0; i < fast.size(); i++)
-    {
+        fast.at(i)->increase_delay(1);
 
-    }
     for(int i = 0; i < medium.size(); i++)
-    {
+        medium.at(i)->increase_delay(1);
 
-    }
     for(int i = 0; i < slow.size(); i++)
-    {
-
-    }
+        slow.at(i)->increase_delay(1);
 }
