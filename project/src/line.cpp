@@ -366,7 +366,7 @@ void Line::update_position()
         {
             if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 20) //se vicino a stazione
             {
-                if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 160) //se locale e treno principale
+                if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 2.7) //se locale e treno principale
                     std::cout;                                                                                                //nothing happens
 
                 else if (stations.at(trains.at(i)->get_stations_done() + 1)->is_full()) //controlla se i binari di una principale sono pieni
@@ -386,7 +386,7 @@ void Line::update_position()
             {
                 std::cout << "Train: " << trains.at(i)->get_train_name();
                 //transita e basta
-                if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 160)
+                if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 2.7)
                 {
                     trains.at(i)->increase_stations_done();
                     std::cout << " - Transit in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << std::endl;
@@ -395,7 +395,7 @@ void Line::update_position()
                 else
                 {
                     std::cout << " - Stopping in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << " - Arrived: ";
-                    if (trains.at(i)->get_velocity_max() == 160)
+                    if (trains.at(i)->get_velocity_max() == 2.7)
                         std::cout << trains.at(i)->get_expected_time(trains.at(i)->get_stations_done() + 1) + trains.at(i)->get_delay();
                     else
                     {
