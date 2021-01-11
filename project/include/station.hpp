@@ -23,7 +23,7 @@ public:
     void print() const;
 
     //controllo se ho binari pieni
-    inline bool is_full() const { if (rail.size() == 2) return true; return false; }
+    inline bool is_full() const { return rail.size() == 2; }
 
     //gestione binari
     inline void add_rail(const std::shared_ptr<Train> p) { rail.push_back(p); }
