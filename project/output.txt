@@ -1,2 +1,23 @@
- ---------- SIMULATION ----------
+deposit.cpp
+station.cpp
 
+1:
+    vector_trains 
+    vector_stations
+    fancy_cout
+
+2:
+    train.cpp
+    update_position
+    print_trains
+    sort_trains
+
+3:
+    depart_station 
+
+print_stations
+update_velocity
+depart_deposit
+departure_next_train
+reverse_stations
+divide_trains
