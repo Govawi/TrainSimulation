@@ -21,6 +21,8 @@ Line::Line()
     std::cout << std::endl;
     print_stations();
     print_trains();
+
+    sim();
 }
 
 //                                                     //
@@ -442,13 +444,15 @@ void Line::depart_station(int index)
 {
     for (int i = 1; i < stations.size(); i++)
     {
-        stations.at(i)->swap_train();
+        if(i != stations.size() - 1)
+            stations.at(i)->swap_train();
+
         if (!stations.at(i)->get_size())
             continue;
 
         if (!stations.at(i)->get_front()->get_stop()) //stop == 0
         {
-            if (i == stations.size() - 1 && stations.at(i)->get_size() != 0)
+            if (i == stations.size() - 1 && stations.at(i)->get_size() > 0)
             {
                 std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " - Bye, Have a Great Time!" << std::endl;
                 stations.at(i)->get_front().reset();
@@ -663,7 +667,7 @@ void Line::sim()
         departure_next_train(minute);
         sort_trains();
         //-------------------------
-        fancy_cout();
+        //fancy_cout();
     }
     std::cout << "prima simulazione ok\n"
               << std::endl;
@@ -672,7 +676,7 @@ void Line::sim()
     reverse_stations();
     line.clear(); // treni in attesa di partire
     line = tmp;
-    /*
+    
     for (int minute = 0; minute < 1440; minute++)
     {
         //update position and velocity train --
@@ -689,8 +693,8 @@ void Line::sim()
         departure_next_train(minute);
         sort_trains();
 
-        fancy_cout();
+        //fancy_cout();
     }
     std::cout << "seconda simulazione ok" << std::endl;
-    */
+    
 }

@@ -7,7 +7,6 @@ using namespace std;
 int main()
 {
     Line test;
-    test.sim();
     return 0;
 }
 /*
