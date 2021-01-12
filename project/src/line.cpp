@@ -385,7 +385,6 @@ void Line::update_position(int index)
                 std::cout << " - Stopping in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << " - Arrived: " << index << " - Delay: " << trains.at(i)->get_delay() << std::endl;
                 trains.at(i)->increase_stations_done();
                 trains.at(i)->set_velocity(0);
-                trains.at(i)->set_distance(stations.at(trains.at(i)->get_stations_done())->get_distance());
                 trains.at(i)->set_stop(5);
                 stations.at(trains.at(i)->get_stations_done())->add_rail(trains.at(i));
                 trains.erase(trains.begin() + i);
@@ -658,7 +657,7 @@ void Line::sim()
     of << " ---------- SIMULATION ----------\n"
        << std::endl;
     of.close();
-    for (int minute = 0; minute < 200; minute++)
+    for (int minute = 0; minute < 1440; minute++)
     {
         //update position and velocity train --
         update_velocity();
@@ -684,7 +683,7 @@ void Line::sim()
     line.clear(); // treni in attesa di partire
     line = tmp;
     
-    for (int minute = 0; minute < 200; minute++)
+    for (int minute = 0; minute < 1440; minute++)
     {
         //update position and velocity train --
         update_velocity();
