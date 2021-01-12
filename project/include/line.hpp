@@ -39,7 +39,7 @@ public:
      * @brief Actual simulation.
      */
     void sim();
-    bool end_of_sim() const;
+    bool continue_sim() const;
 
     /// Andrea Valentinuzzi
     /**

@@ -20,21 +20,21 @@ Line::Line()
     sim();
 }
 
-bool Line::end_of_sim() const
+bool Line::continue_sim() const
 {
     if(!trains.empty())
-        return false;
+        return true;
     if(!line.empty())
-        return false;
+        return true;
     for(int i = 0; i < stations.size(); i++)
     {
-        if(!stations.at(i)->get_size())
-            return false;
+        if(stations.at(i)->get_size())
+            return true;
         if(!stations.at(i)->get_deposit()->is_empty()) 
-            return false;   
+            return true;   
     }
     
-    return true;
+    return false;
 }
 
 void Line::sim()
@@ -53,11 +53,13 @@ void Line::sim()
     // resetting output.txt file
     std::ofstream of("output.txt");
     of << " ---------- SIMULATION ----------" << std::endl
+       << "This simulation is NOT meant to be 100% accurate, instead it gives an APPROXIMATE snapshot of the train line." << std::endl
+       << "Still, it's useful when debugging. :)" << std::endl
        << std::endl;
     of.close();
 
     // simulation direction 0, 2880 minutes = 2 days as time limit.
-    for (int minute = 0; minute < 2880 && !end_of_sim(); minute++)
+    for (int minute = 0; minute < 2880 && continue_sim(); minute++)
     {
         // update position and velocity train
         update_velocity();
@@ -71,9 +73,10 @@ void Line::sim()
         departure_next_train(minute);
         sort_trains();
         
-        //fancy_cout();
+        fancy_cout();
     }
-    std::cout << "> simulation direction 0 OK" << std::endl
+    std::cout << std::endl
+              << " ----- simulation direction 0 OK ----- " << std::endl
               << std::endl;
 
     // cleaning, just to be safe
@@ -86,7 +89,7 @@ void Line::sim()
     line = tmp;
 
     // simulation direction 1, 2880 minutes = 2 days as time limit.
-    for (int minute = 0; minute < 2880 && !end_of_sim(); minute++)
+    for (int minute = 0; minute < 2880 && continue_sim(); minute++)
     {
         // update position and velocity train
         update_velocity();
@@ -100,8 +103,9 @@ void Line::sim()
         departure_next_train(minute);
         sort_trains();
 
-        //fancy_cout();
+        fancy_cout();
     }
-    std::cout << "> simulation direction 1 OK" << std::endl
+    std::cout << std::endl
+              << " ----- simulation direction 1 OK ----- " << std::endl
               << std::endl;
 }
