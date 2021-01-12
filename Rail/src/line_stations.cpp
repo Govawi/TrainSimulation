@@ -43,7 +43,7 @@ void Line::depart_station(int index)
 
             if (trains.empty())  //if there are no trains moving
             {
-                std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
+                std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " - departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
                 stations.at(i)->get_front()->set_velocity(1.3);
                 trains.push_back(stations.at(i)->get_front());
                 stations.at(i)->remove_train();
@@ -52,14 +52,14 @@ void Line::depart_station(int index)
             {
                 if (stations.at(i)->get_distance() > trains.front()->get_distance()) //checks if departing train is the furthest from origin station
                 {
-                    std::cout << "Train " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
+                    std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " - departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
                     stations.at(i)->get_front()->set_velocity(1.3);
                     trains.insert(trains.begin(), stations.at(i)->get_front());
                     stations.at(i)->remove_train();
                 }
                 else if (stations.at(i)->get_distance() < trains.back()->get_distance() && trains.back()->get_distance() - stations.at(i)->get_distance() >= 10) //checks if departing train is the closest to origin station
                 {
-                    std::cout << "Train " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
+                    std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " - departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
                     stations.at(i)->get_front()->set_velocity(1.3);
                     trains.insert(trains.end(), stations.at(i)->get_front());
                     stations.at(i)->remove_train();
@@ -68,7 +68,7 @@ void Line::depart_station(int index)
                     for (int j = 0; j < trains.size() - 1; j++)  //cycle to insert train in vector in the correct position
                         if (stations.at(i)->get_distance() > trains.at(j)->get_distance() && trains.at(j + 1)->get_distance() - stations.at(i)->get_distance() >= 10)
                         {
-                            std::cout << "Train " << stations.at(i)->get_front()->get_train_name() << " departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
+                            std::cout << "Train: " << stations.at(i)->get_front()->get_train_name() << " - departing from " << stations.at(i)->get_name() << " at minute " << index << std::endl;
                             stations.at(i)->get_front()->set_velocity(1.3);
                             trains.insert(trains.begin() + j + 1, stations.at(i)->get_front());
                             stations.at(i)->remove_train();
