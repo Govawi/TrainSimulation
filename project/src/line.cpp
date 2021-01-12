@@ -1,3 +1,9 @@
+/**
+ * @file line.cpp
+ * @authors Alessio Cocco, Andrea Valentinuzzi, Giovanni Brejc
+ * 
+ */
+
 #include "../include/line.hpp"
 #include <fstream>                // output.txt
 #include <iostream>               // yes

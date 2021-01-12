@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @author Andrea Valentinuzzi
+ * @authors Alessio Cocco, Andrea Valentinuzzi, Giovanni Brejc
  * @brief Just some fancy comments explaining stuff and setup of the train line.
  *  
  */
@@ -14,7 +14,7 @@ int main()
     return 0;
 }
 
-/*
+/** @author Andrea Valentinuzzi :)
 
 | ----------------------------------------------------------------------------------- |
 |                  _                          __  ___                                 |
