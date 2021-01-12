@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <iostream>
 #include "station.hpp"
 #include "train.hpp"
 
@@ -49,23 +50,26 @@ public:
      * @brief Sort in order of departure the train
      * 
      */
-    void sort_trains();
 
-    //update trains velocity
+    //;) --------------------
+    void sort_trains();
+    void divide_trains();
     void update_velocity();
     void update_position(int index);
+    void departure_next_train(int index);
+    //------------------------ 
 
     //stations
     void depart_station(int index);
     void depart_deposit();
 
     //departure
-    void departure_next_train(int index);
+    
     
     //simulation
     void sim();
     void reverse_stations();
-    void divide_trains();
+    
 
     //graphics
     void fancy_cout() const;

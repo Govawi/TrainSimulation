@@ -22,10 +22,6 @@ void Deposit::push(std::shared_ptr<Train> p)
 
 std::shared_ptr<Train> Deposit::pop()
 {
-    // checks if deposit is mt
-    if (is_empty())
-        throw std::length_error("** Deposit is mt **"); // https://www.youtube.com/watch?v=S2ihdoT2noo
-
     // 1. empty fast queue
     if (fast.size())
     {
