@@ -325,6 +325,9 @@ void Line::departure_next_train(int index)
 
     if (line.front()->get_expected_time(0) + line.front()->get_delay() == index)
     {
+        if(!trains.empty())
+            std::cout<<"Distanza appena partito "<<trains.back()->get_distance()<< " vel "<<trains.back()->get_velocity_curr()<<std::endl;
+
         if (trains.empty() || trains.back()->get_distance() >= 10)
         {
             trains.push_back(std::move(line.front()));
@@ -335,7 +338,10 @@ void Line::departure_next_train(int index)
         // delay update
         if (!line.empty())
             for (int i = 0; i < line.size() && line.at(i)->get_expected_time(0) + line.at(i)->get_delay() == index; i++)
+            {
+                std::cout<<"add delay to train "<<line.at(i)->get_train_name()<<std::endl;
                 line.at(i)->increase_delay(1);
+            }
     }
 }
 
@@ -379,6 +385,7 @@ void Line::update_position(int index)
                 std::cout << " - Stopping in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << " - Arrived: " << index << " - Delay: " << trains.at(i)->get_delay() << std::endl;
                 trains.at(i)->increase_stations_done();
                 trains.at(i)->set_velocity(0);
+                trains.at(i)->set_distance(stations.at(trains.at(i)->get_stations_done())->get_distance());
                 trains.at(i)->set_stop(5);
                 stations.at(trains.at(i)->get_stations_done())->add_rail(trains.at(i));
                 trains.erase(trains.begin() + i);
@@ -651,7 +658,7 @@ void Line::sim()
     of << " ---------- SIMULATION ----------\n"
        << std::endl;
     of.close();
-    for (int minute = 0; minute < 1440; minute++)
+    for (int minute = 0; minute < 200; minute++)
     {
         //update position and velocity train --
         update_velocity();
@@ -677,7 +684,7 @@ void Line::sim()
     line.clear(); // treni in attesa di partire
     line = tmp;
     
-    for (int minute = 0; minute < 1440; minute++)
+    for (int minute = 0; minute < 200; minute++)
     {
         //update position and velocity train --
         update_velocity();
