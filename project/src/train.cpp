@@ -1,7 +1,13 @@
-#include "../include/train.hpp"
+/**
+ * @file line_trains.cpp
+ * @author Alessio Cocco - 1219609 (alessio.cocco@studentiunipd.it)
+ */
 
-Train::Train(double i, int d, int n, std::vector<double> t)
-    : velocity_max{i}, direction{d}, train_number{n}
+#include "../include/train.hpp"
+#include <iostream>
+
+Train::Train(double max_v, int dir, int num, std::vector<double> t)
+    : velocity_max{max_v}, direction{dir}, train_number{num}
 {
     velocity_curr = 0;
     distance = 0;

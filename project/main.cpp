@@ -9,6 +9,7 @@
 
 int main()
 {
+    // Line setup, will take care of itslef for inputs and simulation.
     Line segmentation_fault;
     return 0;
 }

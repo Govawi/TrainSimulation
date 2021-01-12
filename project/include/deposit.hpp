@@ -1,3 +1,8 @@
+/**
+ * @file deposit.hpp
+ * @author Giovanni Brejc
+ */
+
 #ifndef deposit_hpp
 #define deposit_hpp
 
@@ -9,7 +14,7 @@
 class Deposit
 {
 private:
-    /** @brief Fast queue. */ //is this some weird champ
+    /** @brief Fast queue. */ 
     std::vector<std::shared_ptr<Train>> fast;
     /** @brief Medium queue. */
     std::vector<std::shared_ptr<Train>> medium;
@@ -39,7 +44,10 @@ public:
      * @return Train* that leaves the deposit.
      */
     std::shared_ptr<Train> pop();
-
+    /**
+    * @brief add delay to train in deposit
+    * 
+    */
     void add_delay();
 };
 

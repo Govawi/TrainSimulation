@@ -1,6 +1,12 @@
-#include "../include/line.hpp"
+/**
+ * @file line_trains.cpp
+ * @author Alessio Cocco - 1219609 (alessio.cocco@studentiunipd.it)
+ */
 
-void Line::sort_trains()
+#include "../include/line.hpp"
+#include <iostream>
+
+void Line::sort_trains()    //insertion sort, Auxiliary Space: O(1)
 {
     double key;
     int j;
@@ -18,16 +24,16 @@ void Line::sort_trains()
     }
 }
 
-void Line::divide_trains()
+void Line::divide_trains()     
 {
     while (!trains.empty())
     {
-        if (trains.front()->get_direction() == 0)
+        if (trains.front()->get_direction() == 0)       //if direction = 0 push in line
         {
             line.push_back(std::move(trains.front()));
             trains.erase(trains.begin());
         }
-        else
+        else                                            //else push in tmp
         {
             tmp.push_back(std::move(trains.front()));
             trains.erase(trains.begin());
@@ -37,20 +43,19 @@ void Line::divide_trains()
 
 void Line::update_velocity()
 {
-    // controlla posizione rispetto a prossimo treno e prossima stazione
     for (int i = 0; i < trains.size(); i++)
     {
-        if (trains.at(i)->get_distance() - stations.at(trains.at(i)->get_stations_done())->get_distance() >= 5) // se maggiore 5 accelera a v max
+        if (trains.at(i)->get_distance() - stations.at(trains.at(i)->get_stations_done())->get_distance() >= 5)         //if distance >= 5 can accelerate
             trains.at(i)->set_velocity(trains.at(i)->get_velocity_max());
 
-        if (i != 0)
-            if (trains.at(i - 1)->get_velocity_curr() != 0)
-                if (trains.at(i - 1)->get_distance() - trains.at(i)->get_distance() <= 10) // se minore 10 abbassi velocita'
+        if (i != 0)                                                                                             
+            if (trains.at(i - 1)->get_velocity_curr() != 0)                                                     
+                if (trains.at(i - 1)->get_distance() - trains.at(i)->get_distance() <= 10)                              //if distance <= 10 decrease velocity
                     trains.at(i)->set_velocity(trains.at(i - 1)->get_velocity_curr());
 
-        if (trains.at(i)->get_stations_done() != stations.size() - 1)                                                   //TEST PER PROBLEMI
-            if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 5) // se minore 5 abbassi velocita'
-                trains.at(i)->set_velocity(1.3);                                                                        // 1.3 = 80/60
+        if (trains.at(i)->get_stations_done() != stations.size() - 1)                                                   
+            if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 5) //if distance <= 5 decrease velocity
+                trains.at(i)->set_velocity(1.3);                                                                        
     }
 }
 
@@ -61,18 +66,20 @@ void Line::update_position(int index)
 
     for (int i = 0; i < trains.size(); i++)
     {
-        trains.at(i)->set_distance(trains.at(i)->get_distance() + trains.at(i)->get_velocity_curr()); //update position
-        if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 0)
+        trains.at(i)->set_distance(trains.at(i)->get_distance() + trains.at(i)->get_velocity_curr());                   //update position
+
+        //check position
+        if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 0)     //if arrived in stations
         {
             std::cout << "Train: " << trains.at(i)->get_train_name();
-            if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 2.7) //transita
+            if (stations.at(trains.at(i)->get_stations_done() + 1)->is_local() && trains.at(i)->get_velocity_max() > 2.7) //if shoould transit
             {
                 std::cout << " - Transit in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << std::endl;
                 trains.at(i)->increase_stations_done();
             }
-            else //si ferma
+            else                                                                                                        //if should stop
             {
-                std::cout << " - Stopping in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << " - Arrived: " << index << " - Delay: " << trains.at(i)->get_delay() << std::endl;
+                std::cout << " - Stopping in " << stations.at(trains.at(i)->get_stations_done() + 1)->get_name() << " - Arrived: " << index << " - Delay: " << trains.at(i)->get_delay() << std::endl;  
                 trains.at(i)->increase_stations_done();
                 trains.at(i)->set_velocity(0);
                 trains.at(i)->set_stop(5);
@@ -80,7 +87,7 @@ void Line::update_position(int index)
                 trains.erase(trains.begin() + i);
             }
         }
-        else if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 5)
+        else if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 5) //if at 5 or less km from a station
         {
             if (trains.at(i)->get_deposit())
             {
@@ -91,7 +98,7 @@ void Line::update_position(int index)
                 trains.erase(trains.begin() + i);
             }
         }
-        else if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 20)
+        else if (stations.at(trains.at(i)->get_stations_done() + 1)->get_distance() - trains.at(i)->get_distance() <= 20)   //if at 20 km or less from a station
         {
             if (!stations.at(i)->get_deposit()->is_empty())
                 trains.at(i)->set_deposit(true);
@@ -107,12 +114,12 @@ void Line::departure_next_train(int index)
     if (!line.size())
         return;
 
-    if (line.front()->get_expected_time(0) + line.front()->get_delay() == index)
+    if (line.front()->get_expected_time(0) + line.front()->get_delay() == index)                                //check if a trains should start
     {
         if (!trains.empty())
             std::cout << "Distanza appena partito " << trains.back()->get_distance() << " vel " << trains.back()->get_velocity_curr() << std::endl;
 
-        if (trains.empty() || trains.back()->get_distance() >= 10)
+        if (trains.empty() || trains.back()->get_distance() >= 10)                                             //check if can start
         {
             trains.push_back(std::move(line.front()));
             std::cout << "Train: " << trains.back()->get_train_name() << " - Departure: " << index << " - Delay: " << trains.back()->get_delay() << std::endl;
@@ -120,7 +127,7 @@ void Line::departure_next_train(int index)
             line.erase(line.begin());
         }
         // delay update
-        if (!line.empty())
+        if (!line.empty())                                                                                    //update delay of train not departed, ex. if two trains should start at the same minute
             for (int i = 0; i < line.size() && line.at(i)->get_expected_time(0) + line.at(i)->get_delay() == index; i++)
                 line.at(i)->increase_delay(1);
     }

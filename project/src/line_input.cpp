@@ -1,17 +1,8 @@
 #include "../include/line.hpp"
 #include <fstream>
-#include <string>
 #include <cmath>
-#include <sstream>
+#include <iostream>
 
-//                                                     //
-//  _                   _   _             _            //
-// (_)_ __  _ __  _   _| |_| |_ _ __ __ _(_)_ __  ___  //
-// | | '_ \| '_ \| | | | __| __| '__/ _` | | '_ \/ __| //
-// | | | | | |_) | |_| | |_| |_| | | (_| | | | | \__ \ //
-// |_|_| |_| .__/ \__,_|\__|\__|_|  \__,_|_|_| |_|___/ //
-//         |_|                                         //
-//                                                     //
 void Line::vector_trains()
 {
     // fancy stuff :)
@@ -20,10 +11,9 @@ void Line::vector_trains()
     std::cout << "**   TRAINS INPUT   **" << std::endl;
     std::cout << "**********************" << std::endl;
     std::cout << "|" << std::endl;
-    // --------------
 
     // input stream
-    std::ifstream filett("timetables.txt");
+    std::ifstream filett("input/timetables.txt");
     std::string t;
     while (!filett.eof())
     {
@@ -187,14 +177,6 @@ void Line::vector_trains()
     }
 }
 
-//                                                              //
-//  _                   _       _        _   _                  //
-// (_)_ __  _ __  _   _| |_ ___| |_ __ _| |_(_) ___  _ __  ___  //
-// | | '_ \| '_ \| | | | __/ __| __/ _` | __| |/ _ \| '_ \/ __| //
-// | | | | | |_) | |_| | |_\__ \ || (_| | |_| | (_) | | | \__ \ //
-// |_|_| |_| .__/ \__,_|\__|___/\__\__,_|\__|_|\___/|_| |_|___/ //
-//         |_|                                                  //
-//                                                              //
 void Line::vector_stations()
 {
     // fancy stuff :)
@@ -203,9 +185,9 @@ void Line::vector_stations()
     std::cout << "**  STATIONS INPUT  **" << std::endl;
     std::cout << "**********************" << std::endl;
     std::cout << "|" << std::endl;
-    // --------------
 
-    std::ifstream fileld("line_description.txt");
+    // input stream
+    std::ifstream fileld("input/line_description.txt");
     std::string s;
     int remove = 1;
 

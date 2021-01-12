@@ -1,3 +1,8 @@
+/**
+ * @file deposit.cpp
+ * @author Giovanni Brejc
+ */
+
 #include "../include/deposit.hpp"
 
 bool Deposit::is_empty()
@@ -45,7 +50,7 @@ std::shared_ptr<Train> Deposit::pop()
     return ret;
 }
 
-void Deposit::add_delay()
+void Deposit::add_delay() 
 {
     for(int i = 0; i < fast.size(); i++)
         fast.at(i)->increase_delay(1);

@@ -1,4 +1,10 @@
+/**
+ * @file station.cpp
+ * @author Giovanni Brejc
+ */
+
 #include "../include/station.hpp"
+#include <iostream>
 
 Station::Station(std::string n, double d, bool type)
     : local{type},  deposit{new Deposit()}

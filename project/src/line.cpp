@@ -1,6 +1,6 @@
 #include "../include/line.hpp"
-#include <fstream>
-#include <utility>
+#include <fstream>                // output.txt
+#include <iostream>               // yes
 
 Line::Line()
 {
@@ -20,6 +20,23 @@ Line::Line()
     sim();
 }
 
+bool Line::end_of_sim() const
+{
+    if(!trains.empty())
+        return false;
+    if(!line.empty())
+        return false;
+    for(int i = 0; i < stations.size(); i++)
+    {
+        if(!stations.at(i)->get_size())
+            return false;
+        if(!stations.at(i)->get_deposit()->is_empty()) 
+            return false;   
+    }
+    
+    return true;
+}
+
 void Line::sim()
 {
     std::cout << std::endl
@@ -33,53 +50,58 @@ void Line::sim()
     sort_trains();
     divide_trains();
 
+    // resetting output.txt file
     std::ofstream of("output.txt");
-    of << " ---------- SIMULATION ----------\n"
+    of << " ---------- SIMULATION ----------" << std::endl
        << std::endl;
     of.close();
-    for (int minute = 0; minute < 1440; minute++)
+
+    // simulation direction 0, 2880 minutes = 2 days as time limit.
+    for (int minute = 0; minute < 2880 && !end_of_sim(); minute++)
     {
-        //update position and velocity train --
+        // update position and velocity train
         update_velocity();
         update_position(minute);
-        //------------------------
 
-        //stations --------------
+        // stations
         depart_station(minute);
         depart_deposit();
-        //-----------------------
 
-        //departure ---------------
+        // departure
         departure_next_train(minute);
         sort_trains();
-        //-------------------------
+        
         //fancy_cout();
     }
-    std::cout << "prima simulazione ok\n"
+    std::cout << "> simulation direction 0 OK" << std::endl
               << std::endl;
 
-    trains.clear(); // treni partiti
+    // cleaning, just to be safe
+    trains.clear();
+    // backwards
     reverse_stations();
-    line.clear(); // treni in attesa di partire
+    // cleaning, just to be safe
+    line.clear();
+    // trains that have direction 1
     line = tmp;
 
-    for (int minute = 0; minute < 1440; minute++)
+    // simulation direction 1, 2880 minutes = 2 days as time limit.
+    for (int minute = 0; minute < 2880 && !end_of_sim(); minute++)
     {
-        //update position and velocity train --
+        // update position and velocity train
         update_velocity();
         update_position(minute);
-        //------------------------
 
-        //stations ---------------
+        // stations
         depart_station(minute);
         depart_deposit();
-        //-------------------------
 
-        //departure ---------------
+        // departure
         departure_next_train(minute);
         sort_trains();
 
         //fancy_cout();
     }
-    std::cout << "seconda simulazione ok" << std::endl;
+    std::cout << "> simulation direction 1 OK" << std::endl
+              << std::endl;
 }
