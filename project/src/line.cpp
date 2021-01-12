@@ -12,6 +12,9 @@ Line::Line()
     vector_trains();
     std::cout << "> Trains Input OK" << std::endl;
 
+    // security measure, otherwise trains wouldn't despawn
+    stations.back()->set_main();
+
     // print more, more, more!
     std::cout << std::endl;
     print_stations();

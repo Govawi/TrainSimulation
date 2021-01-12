@@ -116,9 +116,6 @@ void Line::departure_next_train(int index)
 
     if (line.front()->get_expected_time(0) + line.front()->get_delay() == index)                                //check if a trains should start
     {
-        if (!trains.empty())
-            std::cout << "Distanza appena partito " << trains.back()->get_distance() << " vel " << trains.back()->get_velocity_curr() << std::endl;
-
         if (trains.empty() || trains.back()->get_distance() >= 10)                                             //check if can start
         {
             trains.push_back(std::move(line.front()));

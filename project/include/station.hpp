@@ -14,7 +14,7 @@ class Station
 protected:
     std::string name; //station name
     double distance;  //station distance
-    const bool local; //station type
+    bool local; //station type
     std::vector<std::shared_ptr<Train>> rail; //station rails
     std::shared_ptr<Deposit> deposit;         //station deposit
 
@@ -31,6 +31,7 @@ public:
     inline void set_distance(double dis) { distance = dis; }
     inline std::string get_name() const { return name; }
     inline double get_distance() const { return distance; }
+    inline void set_main() { local = false; } //extreme case
     inline bool is_local() const { return local; }
      /**
      * @brief prints stations information
