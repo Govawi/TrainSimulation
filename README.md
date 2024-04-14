@@ -1,4 +1,7 @@
-## Secondo Assegnamento
+### Train Simulation (second assignment)
+Given input files that represent a train line (stations, station types, distance) and a timetable (trains, train types, departure times), build and run a 2-day simulation that accounts for train speed, speed-ups, slow-downs, stops and priority overtaking. Output departures, stops, train signaling to the stations, timetable modifications and delays on the final destination.
+
+---
 
                      _-====-__-======-__-========-_____-============-__
                    _(                                                 _)
